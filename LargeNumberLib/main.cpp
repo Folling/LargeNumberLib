@@ -8,8 +8,9 @@ int main() {
 	largeNum null("0");
 	while (true) {
 		std::cin >> a;
-		std::cin >> b;
-		std::cout << a + b << std::endl;
+		//std::cin >> b;
+		a++;
+		std::cout << a << std::endl;
 	}
 	_getch();
 }

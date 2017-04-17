@@ -20,6 +20,7 @@ public:
 	std::vector<int>& getValue();
 	void setValue(const std::vector<int>& input);
 	int compare(largeNum& toTest);
+	largeNum& changeSign(largeNum& lNparam);
 public:
 	friend std::istream& operator >> (std::istream& is, largeNum& iutputVal);
 	friend std::ostream& operator << (std::ostream& os, largeNum& outputVal);
@@ -31,7 +32,7 @@ public:
 public:
 	largeNum operator =(largeNum& setTo);
 	largeNum operator+=(largeNum& addent);
-	largeNum operator-=(largeNum& addent);
+	largeNum operator-=(largeNum& subtrahend);
 	largeNum operator*=(largeNum& addent);
 	largeNum operator/=(largeNum& addent);
 	largeNum operator%=(largeNum& addent);
