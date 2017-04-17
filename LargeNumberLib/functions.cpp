@@ -15,3 +15,11 @@ int resolveChar(char c_input) {
 	default: throw "Number contains non-numeric values!\n";
 	}
 }
+
+int findFirstNonZero(std::vector<int> x) {
+	int counter = 0;
+	for (int i = x.size() - 1; i >= 0; i--) {
+		if (x.at(i) != 0) return counter;
+		counter++;
+	}
+}

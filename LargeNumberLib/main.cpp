@@ -4,13 +4,11 @@
 #include "largeNum.h"
 
 int main() {
-	largeNum a, b;
-	largeNum null("0");
-	while (true) {
+	largeNum a, b;	
+	while (true) {		
 		std::cin >> a;
-		//std::cin >> b;
-		a++;
-		std::cout << a << std::endl;
+		std::cin >> b;
+		std::cout << a*b << std::endl;
 	}
 	_getch();
 }

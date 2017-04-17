@@ -1,8 +1,3 @@
-﻿  largeNum.cpp
-c:\users\folling\documents\visual studio 2015\projects\largenumberlib\largenumberlib\largenum.cpp(225): warning C4018: '<': signed/unsigned mismatch
-c:\users\folling\documents\visual studio 2015\projects\largenumberlib\largenumberlib\largenum.cpp(283): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  main.cpp
+﻿  main.cpp
   LargeNumberLib.vcxproj -> C:\Users\Folling\Documents\Visual Studio 2015\Projects\LargeNumberLib\Debug\LargeNumberLib.exe
   LargeNumberLib.vcxproj -> C:\Users\Folling\Documents\Visual Studio 2015\Projects\LargeNumberLib\Debug\LargeNumberLib.pdb (Partial PDB)

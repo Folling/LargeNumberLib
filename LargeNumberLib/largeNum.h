@@ -20,7 +20,8 @@ public:
 	std::vector<int>& getValue();
 	void setValue(const std::vector<int>& input);
 	int compare(largeNum& toTest);
-	largeNum& changeSign(largeNum& lNparam);
+	largeNum& changeSign();	
+	char getSign();
 public:
 	friend std::istream& operator >> (std::istream& is, largeNum& iutputVal);
 	friend std::ostream& operator << (std::ostream& os, largeNum& outputVal);
