@@ -1,19 +1,19 @@
 a library to handle very large Numbers for calculations
 
- - what works:
-  - Addition
-  - Subtraction
-  - Negative Values
-  - Comparison of two numbers
-  - operator.equals operators += and -=
+ 1. **Already working :**
+  * Addition
+  * Subtraction
+  * Negative Values
+  * Comparison of two numbers
+  * operator.equals operators += and -=
   
- - what currently works but with positive numbers only:
-  - increment operators;
+ 2. **Already working but solely with positive numbers :**
+  * increment operators;
   
- - what currently doesn't work
-  - multiplication
+ 3. **Somehwat implemented but not yet working**
+  * multiplication
   
- - what will be implemented 
-  - division
-  - the rest of the operator.equals operators
-  - higher math functions (pow(); log(); etc.)
+ 4. **Things to be implemented soon** 
+  * division
+  * the rest of the operator.equals operators
+  * higher math functions (pow(); log(); etc.)
