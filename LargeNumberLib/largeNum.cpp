@@ -60,7 +60,7 @@ largeNum& largeNum::changeSign() {
 	return *this;
 }
 
-char largeNum::getSign() {
+char largeNum::getSign() const{
 	return this->sign;
 }
 
@@ -107,7 +107,6 @@ std::ostream& operator <<(std::ostream& os, largeNum& outputVal) {
   ########################################*/
 
 largeNum largeNum::operator =(largeNum& setTo) {
-
 	this->getValue().resize(setTo.getValue().size());
 	for (uint i = 0; i < this->getValue().size(); i++) {
 		this->getValue().at(i) = setTo.getValue().at(i);
@@ -121,11 +120,12 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 	//macros to shorten the code
 	std::vector<int> &tmp1 = summand1.getValue();
 	std::vector<int> &tmp2 = summand2.getValue();
-	int size = 0;
+	int size;
 	bool storedTen = false;
-	int temp = 0;
-
-	//adapts the smaller vektor to the larger vector by resizing him and reversing him so 1 turns into 00...01
+	int temp;
+	if (summand1 == *zero) return summand2;
+	if (summand2 == *zero) return summand1;
+	//adapts the smaller vector to the larger vector by resizing him and reversing him so 1 turns into 00...01
 	if (tmp1.size() > tmp2.size()) {
 		//puts as many 0s in front of the number as there are more digits in the other number
 		size = tmp1.size();
@@ -146,7 +146,6 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 	if (summand1.sign == '+' && summand2.sign == '+') {
 		//adds all numbers together from right to left
 		for (int i = size - 1; i >= 0; i--) {
-			temp = 0;
 			//checks whether the addition exceeds 10 to store in "storedTen"
 			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9) {
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen - 10;
@@ -167,7 +166,6 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 		returnNum.sign = '-';
 		//adds all numbers together from right to left
 		for (int i = size - 1; i >= 0; i--) {
-			temp = 0;
 			//checks whether the addition exceeds 10 to store in "storedTen"
 			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9) {
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen - 10;
@@ -196,18 +194,30 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 			chosenMethod = 1;
 			for (int i = 0; i < size; i++) {
 				//in either case if the digit is 0 it must not be inverted due to us using negative numbers
-				if (tmp1.at(i) != 0) tmp1.at(i) = (9 - tmp1.at(i));
+				if (i == size - 1) {
+					tmp1.at(i) = (10 - tmp1.at(i));
+					break;
+				}
+				tmp1.at(i) = (9 - tmp1.at(i));
 			}
 		}
 		else {
 			chosenMethod = 2;
-			for (int i = 0; i < size; i++) {			
-				if (tmp2.at(i) != 0) tmp2.at(i) = (9 - tmp2.at(i));
+			largeNum tmp;
+			if (summand2 > summand1) returnNum.changeSign();
+			tmp = summand1;
+			summand1 = summand2;
+			summand2 = tmp;
+			for (int i = 0; i < size; i++) {
+				if (i == size - 1) {
+					tmp1.at(i) = (10 - tmp1.at(i));
+					break;
+				}
+				tmp1.at(i) = (9 - tmp1.at(i));
 			}
 		}
 		//adds newly created vector with the original summand
 		for (int i = size - 1; i >= 0; i--) {
-			temp = 0;
 			//checks whether the addition exceeds 10 to store in "storedTen"
 			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9) {
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen - 10;
@@ -223,24 +233,29 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 		while (returnValue.at(0) == 0 && returnValue.size() != 1) returnValue.erase(returnValue.begin());
 		//in case the first summand is negative and smaller than the second or the second summand is the first digit gets removed
 		//otherwise the first digit has to stay due to negative numbers
-		if ((chosenMethod == 1 && returnNum.sign != summand1.sign) || (chosenMethod == 2 && returnNum.sign != summand2.sign)) {
-			returnValue.erase(returnValue.begin());
-		}
 		//method doesn't work for negative numbers so we adapt it
 		//hereby we take the invert of the values
-		if(returnNum.sign=='-'){
-			for (uint i = 0; i < returnValue.size(); i++) {				
-				if (returnValue.at(i) == 0) {
-					returnValue.at(i) = 0;
-					continue;
+		//since we only want to do 10-.at(i) we check whether it's already been done
+		if (returnNum.sign == '-') {
+			bool addedTen = false;
+			for (int i = (returnValue.size() - 1); i >= 0; i--) {
+				if (returnValue.at(i) == 0 && addedTen == false) continue;
+				if (addedTen == false) {
+					returnValue.at(i) = 10 - returnValue.at(i);
+					addedTen = true;
 				}
 				//inverts the result because of negativity
 				else {
 					returnValue.at(i) = 9 - returnValue.at(i);
 				}
+				if (addedTen == false)returnValue.at(returnValue.size() - 1)++;
 			}
 		}
-		else (returnValue.at(returnValue.size() - 1))++; //not 100% sure why this is necessary but it is so keep it.
+		if (returnNum.sign == '+') {
+			if (tmp1.size() > 1 && tmp2.size() > 1) returnValue.insert(returnValue.begin(), 1);
+			returnValue.erase(returnValue.begin());
+		}
+		if (returnNum.sign == '+') returnValue.erase(returnValue.begin());
 	}	
 	//gets rid of all 0s in front;
 	while (returnValue.at(0) == 0 && returnValue.size() != 1) returnValue.erase(returnValue.begin());
@@ -249,19 +264,47 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 }
 
 largeNum operator-(largeNum& minuend, largeNum& subtrahend) {
-	return (minuend + (-(subtrahend)));
+	return (minuend + -subtrahend);
 }
 
-largeNum operator*(largeNum factor1, largeNum factor2){
+largeNum operator*(largeNum& factor1, largeNum& factor2){
 	if (factor1 == *zero || factor2 == *zero) return *zero;
-	largeNum tmp1 = factor1;
-	largeNum tmp2 = factor2;
 	largeNum result = *zero;
-	tmp1.sign = '+';
-	tmp2.sign = '+';	
-	for (; tmp2 > *zero; tmp2--) {
-		result += tmp1;
+	//if you multiply e.g. 4 with 4 you get 16 so 6 carryover 1	
+	int carryOver = 0;
+	largeNum toAdd = *zero;
+	//macros
+	std::vector<int>& tmp1 = factor1.getValue();
+	std::vector<int>& tmp2 = factor2.getValue();	
+	std::vector<int>& tmp3 = toAdd.getValue();
+	std::vector<int>& tmp4 = result.getValue();
+	//goes through each digit from factor 2 and multiplies it with each digit from factor 1 adding the values together
+	for (int i = tmp2.size() - 1; i >= 0; i--) {
+		for (int j = tmp1.size() - 1; j >= 0; j--) {
+			int temp = tmp1.at(j) * tmp2.at(i) + carryOver;
+			carryOver = temp / 10;
+			tmp3.insert(tmp3.begin(), temp % 10);						
+		}
+		//to adapt since the digits in this kind of multiplication are technically shifted.
+		int zeroExtender = tmp2.size()-1 - i;
+		while (zeroExtender != 0) {
+			tmp3.insert(tmp3.end(), 0);
+			zeroExtender--;
+		}
+		//in case there's still a value left over this value becomes the new 1. digit
+		tmp3.insert(tmp3.begin(), carryOver);
+		//then it adds the previously calculated result to the current one and resets it
+		result += toAdd;
+		carryOver = 0;
+		toAdd = *zero;
 	}
+	//afterwards the final digit gets added if there is one.
+	//tmp4.insert(tmp4.begin(), carryOver);
+	//the last digit gets removed because there is always a 0 at the end
+	tmp4.erase(tmp4.end()-1);
+	while (tmp4.at(0) == 0) tmp4.erase(tmp4.begin());
+	//since multiplication disregards signs when it comes to value
+	//the end sign is determined by the input signs though.
 	if (factor1.sign == factor2.sign) result.sign = '+';
 	else result.sign = '-';
 	return result;
@@ -278,6 +321,11 @@ largeNum largeNum::operator+=(largeNum& addent) {
 
 largeNum largeNum::operator-=(largeNum& subtrahend) {
 	*this = *this - subtrahend;
+	return *this;
+}
+
+largeNum largeNum::operator*=(largeNum& factor){
+	*this = *this*factor;
 	return *this;
 }
 
@@ -328,8 +376,6 @@ largeNum largeNum::operator-() {
   ######################################*/
 
 bool largeNum::operator==(largeNum& test) {
-	std::vector<int> &tmp1 = this->getValue();
-	std::vector<int> &tmp2 = test.getValue();
 	if (this->sign != test.sign) return false;
 	return (this->compare(test) == 0)? true : false;
 }
@@ -386,3 +432,4 @@ bool largeNum::operator !() {
 	return true;
 }
 
+//todo addition works but only for the first value being negative, fix that

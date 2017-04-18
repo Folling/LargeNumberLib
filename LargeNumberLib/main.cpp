@@ -5,7 +5,7 @@
 
 int main() {
 	largeNum a, b;	
-	while (true) {		
+	while (true) {
 		std::cin >> a;
 		std::cin >> b;
 		std::cout << a*b << std::endl;
