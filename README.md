@@ -7,9 +7,8 @@ a library to handle very large Numbers for calculations
   * Comparison of two numbers
   * operator.equals operators += and -=  
   * increment operators;
-  
- 2. **Somehwat implemented but not yet working**
-  * multiplication
+  * multiplication;
+  * factorials (up to 150 digits in 5 seconds, probably need to implement the Theta Function for better results)
   
  3. **Things to be implemented soon** 
   * division
