@@ -5,7 +5,7 @@ a library to handle very large Numbers for calculations
   * Subtraction
   * Negative Values
   * Comparison of two numbers
-  * operator.equals operators += and -=  
+  * operator.equals operators += and -= and *= 
   * increment operators;
   * multiplication;
   * factorials (up to 150 digits in 5 seconds, probably need to implement the Theta Function for better results)
