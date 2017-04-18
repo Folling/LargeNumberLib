@@ -19,7 +19,8 @@ int resolveChar(char c_input) {
 int findFirstNonZero(std::vector<int> x) {
 	int counter = 0;
 	for (int i = x.size() - 1; i >= 0; i--) {
-		if (x.at(i) != 0) return counter;
+		if (x.at(i) != 0) break;
 		counter++;
 	}
+	return counter;
 }

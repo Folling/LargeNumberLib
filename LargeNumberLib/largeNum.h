@@ -23,6 +23,8 @@ public:
 	largeNum& changeSign();	
 	char getSign() const;
 public:
+	friend largeNum factorial(largeNum& input);
+public:
 	friend std::istream& operator >> (std::istream& is, largeNum& iutputVal);
 	friend std::ostream& operator << (std::ostream& os, largeNum& outputVal);
 	friend largeNum operator+(largeNum& summand1, largeNum& summand2);
@@ -41,7 +43,7 @@ public:
 	largeNum operator-- (int x);
 	largeNum operator++();
 	largeNum operator--();
-	largeNum operator -();
+	largeNum operator -() const;
 public:
 	bool operator ==(largeNum& test);
 	bool operator > (largeNum& test);
