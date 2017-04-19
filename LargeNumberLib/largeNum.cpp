@@ -42,12 +42,11 @@ void largeNum::setValue(const std::vector<int>& input) {
 }
 
 int largeNum::compare(largeNum& toTest) {
-	uint size;
 	std::vector<int> tmp1 = this->getValue();
 	std::vector<int> tmp2 = toTest.getValue();
 	if (tmp1.size() > tmp2.size()) return 1;
-	else if (tmp1.size() < tmp2.size()) return -1;
-	else size = tmp1.size();
+	if (tmp1.size() < tmp2.size()) return -1;
+	uint size = tmp1.size();
 	for (uint i = 0; i < size; i++) {
 		if (tmp1.at(i) > tmp2.at(i)) return 1;
 		if (tmp1.at(i) < tmp2.at(i)) return -1;
@@ -107,9 +106,13 @@ std::ostream& operator <<(std::ostream& os, largeNum& outputVal) {
   ##########MATHEMATICAL FUNCTIONS##########
   ##########################################*/
 
-largeNum factorial(largeNum& input) {
-	if (input > one) return (input * factorial(input-one));
-	else return one;
+largeNum largeNum::factorial() {
+	largeNum res = one;
+	while (*this > one) {
+		res *= *this;
+		*this -= one;
+	}
+	return res;
 }
 
 /*########################################
@@ -280,7 +283,7 @@ largeNum operator-(largeNum& minuend, largeNum& subtrahend) {
 largeNum operator*(largeNum& factor1, largeNum& factor2){
 	if (factor1 == zero || factor2 == zero || factor1 == negZero || factor2 == negZero) return zero;	
 	largeNum result = zero;
-	//if you multiply e.g. 4 with 4 you get 16 so 6 carryover 1	
+	//if you multiply e.g. 4 with 4 you get 16 so 6 carryover 1
 	int carryOver = 0;
 	largeNum toAdd = zero;
 	//macros
@@ -321,12 +324,60 @@ largeNum operator*(largeNum& factor1, largeNum& factor2){
 	return result;
 }
 
-largeNum operator/(largeNum& factor1, largeNum& factor2) {
-	//old method was way too slow at higher values so it was basically pointless. 
-	//needs to have a more efficent way, probably with subtraction
-	//or just implement the normal division you'd do by paper
-	largeNum dummy('1');
-	return dummy;
+largeNum largeNum::operator/(largeNum& divisor) {
+	if (this->compare(divisor)==-1) throw "Fractions or float-point numbers are not yet supported!\n";
+	if (*this == divisor) return one;
+	if (divisor == zero) throw "Division by zero is dangerous man!\n";
+	if (divisor == one) return *this; // x/1 = x
+
+	largeNum tmp1 = *this;
+	largeNum tmp2 = divisor;
+	largeNum result = zero;
+
+	//macros	
+	std::vector<int> tValue = tmp1.getValue();
+	std::vector<int> dValue = tmp2.getValue();
+	std::vector<int>& rValue = result.getValue();
+	int currResult = 0;
+
+	for (int i = 0; i < tValue.size(); i++) {
+			for (int j = dValue.size()-1; j >= 0; j--) {
+				while (tValue.at(i) - dValue.at(j)*pow(10, j) >= 0) {
+					if (dValue.at(j) == 0) {
+						currResult++;
+						break;
+					}
+					tValue.at(i) -= dValue.at(j); 
+					currResult++;
+				}
+			}
+		int reminder = tValue.at(i);
+		if (currResult == 0)
+		{
+			if (i == tValue.size() - 1) {
+				rValue.insert(rValue.end(), 0);
+				break;
+			}
+			tValue.at(i + 1) += reminder * 10;
+		}
+		rValue.insert(rValue.end(), currResult);
+		currResult = 0;
+		reminder = 0;
+		for(int i = 0; i < rValue.size(); i++)	{
+			if (rValue.at(i) >= 10)	{
+				if (i == rValue.size() - 1) rValue.insert(rValue.begin(), 1);
+				else {
+					rValue.at(i - 1)++;
+					rValue.at(i) /= 10;
+				}
+				rValue.at(i) = rValue.at(i) % 10;				
+			}
+		}
+	}
+	while (rValue.at(0) == 0 && rValue.size() != 1) rValue.erase(rValue.begin());
+	if (tmp1.sign == tmp2.sign) result.sign = '+';
+	else result.sign = '-';
+	return result;
 }
 
 /*#############################################

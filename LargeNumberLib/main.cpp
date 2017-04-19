@@ -7,10 +7,9 @@ int main() {
 	largeNum a, b;
 	while (true) {
 		std::cin >> a;
-		//std::cin >> b;
+		std::cin >> b;
 		try {
-			std::cout << factorial(a) << std::endl;
-			std::cout << a;
+			std::cout << a/b << std::endl;
 		}
 		catch(const char* msg)
 		{

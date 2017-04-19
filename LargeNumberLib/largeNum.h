@@ -23,14 +23,14 @@ public:
 	largeNum& changeSign();	
 	char getSign() const;
 public:
-	friend largeNum factorial(largeNum& input);
+	largeNum factorial();
 public:
 	friend std::istream& operator >> (std::istream& is, largeNum& iutputVal);
 	friend std::ostream& operator << (std::ostream& os, largeNum& outputVal);
 	friend largeNum operator+(largeNum& summand1, largeNum& summand2);
 	friend largeNum operator-(largeNum& minuend, largeNum& subtrahend);
 	friend largeNum operator*(largeNum& factor1, largeNum& factor2);
-	friend largeNum operator/(largeNum& dividend, largeNum& divisor);
+	largeNum operator/(largeNum& divisor);
 	friend largeNum operator%(largeNum& dividend, largeNum& divisor);
 public:
 	largeNum operator =(largeNum& setTo);
