@@ -5,11 +5,13 @@
 
 int main() {
 	largeNum a, b;
+	int aint;
 	while (true) {
-		std::cin >> a;
-		std::cin >> b;
+		std::cin >> aint;
+		//std::cin >> b;
+		a = aint;
 		try {
-			std::cout << a/b << std::endl;
+			std::cout << a<< std::endl;
 		}
 		catch(const char* msg)
 		{

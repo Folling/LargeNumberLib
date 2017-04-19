@@ -4,15 +4,22 @@ largeNum zero('0');
 largeNum one('1');
 largeNum negZero = -zero;
 
-largeNum::largeNum()
-{
+largeNum::largeNum(){
 	value.resize(1);
 	value[0] = 0;
 	sign = '+';
 }
 
-largeNum::largeNum(std::string s_input)
-{
+largeNum::largeNum(largeNum &setTo){
+	this->getValue().resize(setTo.getValue().size());
+	for (uint i = 0; i < this->getValue().size(); i++) {
+		this->getValue().at(i) = setTo.getValue().at(i);
+	}
+	this->sign = setTo.sign;
+}
+
+
+largeNum::largeNum(std::string s_input){
 	sign = '+';
 	uint i = 1;
 	if (s_input[0] == '-') sign = '-';
@@ -79,6 +86,7 @@ std::istream& operator >> (std::istream& is, largeNum& val) {
 		val.sign = '-';
 		s_input.erase(s_input.begin());
 	}
+	if (s_input[0] > 57 || s_input[0] < 48) throw "Error, please enter only one minus sign!\n";
 	else val.sign = '+';
 	std::vector<int> futureValue(s_input.size());
 	try {
@@ -118,15 +126,6 @@ largeNum largeNum::factorial() {
 /*########################################
   ##########ARITHMETIC OPERATORS##########
   ########################################*/
-
-largeNum largeNum::operator =(largeNum& setTo) {
-	this->getValue().resize(setTo.getValue().size());
-	for (uint i = 0; i < this->getValue().size(); i++) {
-		this->getValue().at(i) = setTo.getValue().at(i);
-	}
-	this->sign = setTo.sign;
-	return *this;
-}
 
 largeNum operator+(largeNum& summand1, largeNum& summand2) {
 	largeNum returnNum;
@@ -338,43 +337,7 @@ largeNum largeNum::operator/(largeNum& divisor) {
 	std::vector<int> tValue = tmp1.getValue();
 	std::vector<int> dValue = tmp2.getValue();
 	std::vector<int>& rValue = result.getValue();
-	int currResult = 0;
 
-	for (int i = 0; i < tValue.size(); i++) {
-			for (int j = dValue.size()-1; j >= 0; j--) {
-				while (tValue.at(i) - dValue.at(j)*pow(10, j) >= 0) {
-					if (dValue.at(j) == 0) {
-						currResult++;
-						break;
-					}
-					tValue.at(i) -= dValue.at(j); 
-					currResult++;
-				}
-			}
-		int reminder = tValue.at(i);
-		if (currResult == 0)
-		{
-			if (i == tValue.size() - 1) {
-				rValue.insert(rValue.end(), 0);
-				break;
-			}
-			tValue.at(i + 1) += reminder * 10;
-		}
-		rValue.insert(rValue.end(), currResult);
-		currResult = 0;
-		reminder = 0;
-		for(int i = 0; i < rValue.size(); i++)	{
-			if (rValue.at(i) >= 10)	{
-				if (i == rValue.size() - 1) rValue.insert(rValue.begin(), 1);
-				else {
-					rValue.at(i - 1)++;
-					rValue.at(i) /= 10;
-				}
-				rValue.at(i) = rValue.at(i) % 10;				
-			}
-		}
-	}
-	while (rValue.at(0) == 0 && rValue.size() != 1) rValue.erase(rValue.begin());
 	if (tmp1.sign == tmp2.sign) result.sign = '+';
 	else result.sign = '-';
 	return result;
@@ -425,7 +388,7 @@ largeNum largeNum::operator--() {
 	return *this;
 }
 
-largeNum largeNum::operator -() const {
+largeNum largeNum::operator -(){
 	largeNum result = *this;
 	result.changeSign();
 	return result;
