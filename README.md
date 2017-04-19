@@ -10,7 +10,7 @@ a library to handle very large Numbers for calculations
   * multiplication
   * normal types (no floats or doubles) conversion to largeNumbers
    
- 3. **Things to be implemented soon** 
+ 2. **Things to be implemented soon** 
   * division
   * thelast two operator.equals operators
   * higher math functions (pow(); log(); etc.)
