@@ -1,8 +1,4 @@
-﻿  functions.cpp
-  Generating Code...
-  Compiling...
-  main.cpp
-  largeNum.cpp
-  Generating Code...
+﻿  largeNum.cpp
+c:\users\folling\documents\visual studio 2015\projects\largenumberlib\largenumberlib\largenum.cpp(428): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
   LargeNumberLib.vcxproj -> C:\Users\Folling\Documents\Visual Studio 2015\Projects\LargeNumberLib\Debug\LargeNumberLib.exe
   LargeNumberLib.vcxproj -> C:\Users\Folling\Documents\Visual Studio 2015\Projects\LargeNumberLib\Debug\LargeNumberLib.pdb (Partial PDB)

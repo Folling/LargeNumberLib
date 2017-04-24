@@ -7,11 +7,10 @@ int main() {
 	largeNum a, b;
 	int aint;
 	while (true) {
-		std::cin >> aint;
-		//std::cin >> b;
-		a = aint;
+		std::cin >> a;
+		std::cin >> b;
 		try {
-			std::cout << a<< std::endl;
+			std::cout << a/b << std::endl;
 		}
 		catch(const char* msg)
 		{

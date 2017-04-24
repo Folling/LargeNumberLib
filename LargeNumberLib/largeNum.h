@@ -14,15 +14,18 @@ class largeNum
 public:
 	largeNum();
 	largeNum(largeNum &x);
-	template <typename T> largeNum(T x);
-	largeNum(std::string x);
-	largeNum(char x);
+	template <typename T>
+	explicit largeNum(T x);
+	explicit largeNum(std::string x);
+	explicit largeNum(char x);
 	~largeNum();
 public:
 	std::vector<int>& getValue();
 	void setValue(const std::vector<int>& input);
 	int compare(largeNum& toTest);
 	largeNum& changeSign();	
+	largeNum& toNegative();
+	largeNum& toPositive();
 	char getSign() const;
 public:
 	largeNum factorial();
@@ -63,20 +66,25 @@ private:
 
 template <typename T> largeNum::largeNum(T input) {
 	value.resize(19);
-	int i_input = input;
 	int i = 1;
+	bool isNegative = false;
+	if (input < 0) {
+		input *= -1;
+		isNegative = true;
+	}
 	while (true) {
-		value.at(value.size() - i) = i_input % 10;
-		i_input /= 10;
-		if (i_input == 0) break;
+		value.at(value.size() - i) = input % 10;
+		input /= 10;
+		if (input == 0) break;
 		i++;
 	}
 	while (value.at(0) == 0 && value.size() != 1) value.erase(value.begin());
+	this->sign = (isNegative == true) ? '-' : '+';
 }
 
-template <typename T>
-largeNum largeNum::operator=(T setTo) {
+template <typename T> largeNum largeNum::operator=(T setTo) {
 	largeNum tmp(setTo);
+	while (tmp.getValue().at(0) == 0)tmp.getValue().erase(tmp.getValue().begin());
 	*this = tmp;
 	return *this;
 }

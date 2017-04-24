@@ -24,3 +24,10 @@ int findFirstNonZero(std::vector<int> x) {
 	}
 	return counter;
 }
+
+int findIntLength(int i_input){
+	int lengthCount = 0;
+	for (; i_input != 0; i_input /= 10, lengthCount++);
+	return lengthCount;
+
+}

@@ -1,38 +1,46 @@
 #include "largeNum.h"
 
-largeNum zero('0');
-largeNum one('1');
+largeNum zero(0);
+largeNum one(1);
+largeNum two(2);
+largeNum ten(10);
 largeNum negZero = -zero;
 
-largeNum::largeNum(){
+largeNum::largeNum()
+{
 	value.resize(1);
 	value[0] = 0;
 	sign = '+';
 }
 
-largeNum::largeNum(largeNum &setTo){
+largeNum::largeNum(largeNum& setTo)
+{
 	this->getValue().resize(setTo.getValue().size());
-	for (uint i = 0; i < this->getValue().size(); i++) {
+	for (uint i = 0; i < this->getValue().size(); i++)
+	{
 		this->getValue().at(i) = setTo.getValue().at(i);
 	}
 	this->sign = setTo.sign;
 }
 
 
-largeNum::largeNum(std::string s_input){
+largeNum::largeNum(std::string s_input)
+{
 	sign = '+';
 	uint i = 1;
 	if (s_input[0] == '-') sign = '-';
 	else i--;
 	value.resize(s_input.size());
-	for (; i < s_input.size(); i++) {
+	for (; i < s_input.size(); i++)
+	{
 		value.at(i) = resolveChar(s_input[i]);
-	}	
+	}
 }
 
-largeNum::largeNum(char c_input) {
+largeNum::largeNum(char c_input)
+{
 	value.resize(1);
-	value.at(0) = resolveChar(c_input);	
+	value.at(0) = resolveChar(c_input);
 	sign = '+';
 }
 
@@ -40,34 +48,53 @@ largeNum::~largeNum()
 {
 }
 
-std::vector<int>& largeNum::getValue() {
+std::vector<int>& largeNum::getValue()
+{
 	return value;
 }
 
-void largeNum::setValue(const std::vector<int>& input) {
+void largeNum::setValue(const std::vector<int>& input)
+{
 	value = input;
 }
 
-int largeNum::compare(largeNum& toTest) {
+int largeNum::compare(largeNum& toTest)
+{
 	std::vector<int> tmp1 = this->getValue();
 	std::vector<int> tmp2 = toTest.getValue();
 	if (tmp1.size() > tmp2.size()) return 1;
 	if (tmp1.size() < tmp2.size()) return -1;
 	uint size = tmp1.size();
-	for (uint i = 0; i < size; i++) {
+	for (uint i = 0; i < size; i++)
+	{
 		if (tmp1.at(i) > tmp2.at(i)) return 1;
 		if (tmp1.at(i) < tmp2.at(i)) return -1;
 	}
 	return 0;
 }
 
-largeNum& largeNum::changeSign() {
+largeNum& largeNum::changeSign()
+{
 	if (this->sign == '+') this->sign = '-';
 	else this->sign = '+';
 	return *this;
 }
 
-char largeNum::getSign() const{
+largeNum& largeNum::toPositive()
+{
+	if (this->sign == '-') this->changeSign();
+	return *this;
+}
+
+largeNum& largeNum::toNegative()
+{
+	if (this->sign == '+') this->changeSign();
+	return *this;
+}
+
+
+char largeNum::getSign() const
+{
 	return this->sign;
 }
 
@@ -87,13 +114,13 @@ std::istream& operator >> (std::istream& is, largeNum& val) {
 		s_input.erase(s_input.begin());
 	}
 	if (s_input[0] > 57 || s_input[0] < 48) throw "Error, please enter only one minus sign!\n";
-	else val.sign = '+';
 	std::vector<int> futureValue(s_input.size());
 	try {
 		for (; i < s_input.size(); i++) {
 			futureValue.at(i) = resolveChar(s_input[i]);
 		}
 		val.setValue(futureValue);
+		while (val.getValue().at(0) == 0 && val.getValue().size() != 1) val.getValue().erase(val.getValue().begin());
 		return is;
 	}
 	catch (const char* msg) {
@@ -102,9 +129,11 @@ std::istream& operator >> (std::istream& is, largeNum& val) {
 	}
 }
 
-std::ostream& operator <<(std::ostream& os, largeNum& outputVal) {
+std::ostream& operator <<(std::ostream& os, largeNum& outputVal)
+{
 	if (outputVal.sign == '-') std::cout << '-';
-	for (uint i = 0; i < outputVal.getValue().size(); i++) {
+	for (uint i = 0; i < outputVal.getValue().size(); i++)
+	{
 		os << outputVal.getValue().at(i);
 	}
 	return os;
@@ -114,9 +143,11 @@ std::ostream& operator <<(std::ostream& os, largeNum& outputVal) {
   ##########MATHEMATICAL FUNCTIONS##########
   ##########################################*/
 
-largeNum largeNum::factorial() {
+largeNum largeNum::factorial()
+{
 	largeNum res = one;
-	while (*this > one) {
+	while (*this > one)
+	{
 		res *= *this;
 		*this -= one;
 	}
@@ -127,45 +158,54 @@ largeNum largeNum::factorial() {
   ##########ARITHMETIC OPERATORS##########
   ########################################*/
 
-largeNum operator+(largeNum& summand1, largeNum& summand2) {
+largeNum operator+(largeNum& summand1, largeNum& summand2)
+{
 	largeNum returnNum;
 	//macros to shorten the code
 	largeNum LNtmp1 = summand1;
 	largeNum LNtmp2 = summand2;
-	std::vector<int> &tmp1 = LNtmp1.getValue();
-	std::vector<int> &tmp2 = LNtmp2.getValue();
+	std::vector<int>& tmp1 = LNtmp1.getValue();
+	std::vector<int>& tmp2 = LNtmp2.getValue();
 	int size;
 	bool storedTen = false;
 	int temp;
 	if (LNtmp1 == zero) return summand2;
 	if (LNtmp2 == zero) return summand1;
 	//adapts the smaller vector to the larger vector by resizing him and reversing him so 1 turns into 00...01
-	if (tmp1.size() > tmp2.size()) {
+	if (tmp1.size() > tmp2.size())
+	{
 		//puts as many 0s in front of the number as there are more digits in the other number
 		size = tmp1.size();
-		while (tmp1.size() != tmp2.size()) {
+		while (tmp1.size() != tmp2.size())
+		{
 			tmp2.insert(tmp2.begin(), 0);
 		}
 	}
-	else if (tmp2.size() > tmp1.size()) {
+	else if (tmp2.size() > tmp1.size())
+	{
 		//puts as many 0s in front of the number as there are more digits in the other number
 		size = tmp2.size();
-		while (tmp2.size() != tmp1.size()) {
+		while (tmp2.size() != tmp1.size())
+		{
 			tmp1.insert(tmp1.begin(), 0);
 		}
 	}
 	else size = tmp1.size();
 	std::vector<int> returnValue(size + 1);
 	// if a digit + a digit exceeds 10 this gets stored to be added to the next comparison
-	if (LNtmp1.sign == '+' && LNtmp2.sign == '+') {
+	if (LNtmp1.sign == '+' && LNtmp2.sign == '+')
+	{
 		//adds all numbers together from right to left
-		for (int i = size - 1; i >= 0; i--) {
+		for (int i = size - 1; i >= 0; i--)
+		{
 			//checks whether the addition exceeds 10 to store in "storedTen"
-			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9) {
+			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9)
+			{
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen - 10;
 				storedTen = true;
 			}
-			else {
+			else
+			{
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen;
 				storedTen = false;
 			}
@@ -176,16 +216,20 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 		if (storedTen == 1) returnValue[0] = 1;
 		returnNum.setValue(returnValue);
 	}
-	else if (LNtmp1.sign == '-' && LNtmp2.sign == '-') {
+	else if (LNtmp1.sign == '-' && LNtmp2.sign == '-')
+	{
 		returnNum.sign = '-';
 		//adds all numbers together from right to left
-		for (int i = size - 1; i >= 0; i--) {
+		for (int i = size - 1; i >= 0; i--)
+		{
 			//checks whether the addition exceeds 10 to store in "storedTen"
-			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9) {
+			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9)
+			{
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen - 10;
 				storedTen = true;
 			}
-			else {
+			else
+			{
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen;
 				storedTen = false;
 			}
@@ -196,31 +240,37 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 		returnNum.setValue(returnValue);
 	}
 	//case for when the signs are different
-	else {
+	else
+	{
 		if (LNtmp1.compare(LNtmp2) == 0) return zero; // -x + x = 0
 		if (LNtmp1.compare(LNtmp2) == 1) returnNum.sign = LNtmp1.sign;
 		else returnNum.sign = LNtmp2.sign;
 		//for more information on how this part works check: https://www.youtube.com/watch?v=PS5p9caXS4U
 		//turns the in the video described method, summand which will function as the subtrahend and changes it as required
 		//with the difference that it doesn't reduce it by 10 at the end since we will invert the result
-		if (LNtmp1.sign == '-') {
-			for (int i = 0; i < size; i++) {
+		if (LNtmp1.sign == '-')
+		{
+			for (int i = 0; i < size; i++)
+			{
 				//in either case if the digit is 0 it must not be inverted due to us using negative numbers
-				if (i == size - 1) {
+				if (i == size - 1)
+				{
 					tmp1.at(i) = (10 - tmp1.at(i));
 					break;
 				}
 				tmp1.at(i) = (9 - tmp1.at(i));
 			}
 		}
-		else {
-			largeNum tmp;
+		else
+		{
 			if (LNtmp2 > LNtmp1) returnNum.changeSign();
-			tmp = LNtmp1;
+			largeNum tmp = LNtmp1;
 			LNtmp1 = LNtmp2;
 			LNtmp2 = tmp;
-			for (int i = 0; i < size; i++) {
-				if (i == size - 1) {
+			for (int i = 0; i < size; i++)
+			{
+				if (i == size - 1)
+				{
 					tmp1.at(i) = (10 - tmp1.at(i));
 					break;
 				}
@@ -228,78 +278,91 @@ largeNum operator+(largeNum& summand1, largeNum& summand2) {
 			}
 		}
 		//adds newly created vector with the original summand
-		for (int i = size - 1; i >= 0; i--) {
+		for (int i = size - 1; i >= 0; i--)
+		{
 			//checks whether the addition exceeds 10 to store in "storedTen"
-			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9) {
+			if (tmp1.at(i) + tmp2.at(i) + storedTen > 9)
+			{
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen - 10;
 				storedTen = true;
 			}
-			else {
+			else
+			{
 				temp = tmp1.at(i) + tmp2.at(i) + storedTen;
 				storedTen = false;
 			}
 			returnValue.at(i + 1) = temp;
 		}
-		if (storedTen == true) returnValue.insert(returnValue.begin() , 1);
+		if (storedTen == true) returnValue.insert(returnValue.begin(), 1);
 		while (returnValue.at(0) == 0 && returnValue.size() != 1) returnValue.erase(returnValue.begin());
 		//in case the first summand is negative and smaller than the second or the second summand is the first digit gets removed
 		//otherwise the first digit has to stay due to negative numbers
 		//method doesn't work for negative numbers so we adapt it
 		//hereby we take the invert of the values
 		//since we only want to do 10-.at(i) we check whether it's already been done
-		if (returnNum.sign == '-') {
+		if (returnNum.sign == '-')
+		{
 			bool addedTen = false;
-			for (int i = (returnValue.size() - 1); i >= 0; i--) {
+			for (int i = (returnValue.size() - 1); i >= 0; i--)
+			{
 				if (returnValue.at(i) == 0 && addedTen == false) continue;
-				if (addedTen == false) {
+				if (addedTen == false)
+				{
 					returnValue.at(i) = 10 - returnValue.at(i);
 					addedTen = true;
 				}
 				//inverts the result because of negativity
-				else {
+				else
+				{
 					returnValue.at(i) = 9 - returnValue.at(i);
 				}
 				if (addedTen == false)returnValue.at(returnValue.size() - 1)++;
 			}
 		}
-		if (returnNum.sign == '+') {
+		if (returnNum.sign == '+')
+		{
 			if (tmp1.size() > 1 && tmp2.size() > 1) returnValue.insert(returnValue.begin(), 1);
 			returnValue.erase(returnValue.begin());
 		}
 		if (returnNum.sign == '+') returnValue.erase(returnValue.begin());
-	}	
+	}
 	//gets rid of all 0s in front;
 	while (returnValue.at(0) == 0 && returnValue.size() != 1) returnValue.erase(returnValue.begin());
 	returnNum.setValue(returnValue);
 	return returnNum;
 }
 
-largeNum operator-(largeNum& minuend, largeNum& subtrahend) {
+largeNum operator-(largeNum& minuend, largeNum& subtrahend)
+{
 	largeNum result = (minuend + -subtrahend);
 	return result;
 }
 
-largeNum operator*(largeNum& factor1, largeNum& factor2){
-	if (factor1 == zero || factor2 == zero || factor1 == negZero || factor2 == negZero) return zero;	
+largeNum operator*(largeNum& factor1, largeNum& factor2)
+{
+	if (factor1 == zero || factor2 == zero || factor1 == negZero || factor2 == negZero) return zero;
 	largeNum result = zero;
 	//if you multiply e.g. 4 with 4 you get 16 so 6 carryover 1
 	int carryOver = 0;
 	largeNum toAdd = zero;
 	//macros
 	std::vector<int>& tmp1 = factor1.getValue();
-	std::vector<int>& tmp2 = factor2.getValue();	
+	std::vector<int>& tmp2 = factor2.getValue();
 	std::vector<int>& tmp3 = toAdd.getValue();
 	std::vector<int>& tmp4 = result.getValue();
 	//goes through each digit from factor 2 and multiplies it with each digit from factor 1 adding the values together
-	for (int i = tmp2.size() - 1; i >= 0; i--) {
-		for (int j = tmp1.size() - 1; j >= 0; j--) {
+	for (int i = tmp2.size() - 1; i >= 0; i--)
+	{
+		for (int j = tmp1.size() - 1; j >= 0; j--)
+		{
 			int temp = tmp1.at(j) * tmp2.at(i) + carryOver;
 			carryOver = temp / 10;
-			tmp3.insert(tmp3.begin(), temp % 10);						
+			tmp3.insert(tmp3.begin(), temp % 10);
 		}
 		//to adapt since the digits in this kind of multiplication are technically shifted.
-		int zeroExtender = tmp2.size()-1 - i;
-		while (zeroExtender != 0) {
+		int zeroExtender = tmp2.size() - 1 - i;
+		while (zeroExtender != 0)
+		{
 			tmp3.insert(tmp3.end(), 0);
 			zeroExtender--;
 		}
@@ -323,22 +386,71 @@ largeNum operator*(largeNum& factor1, largeNum& factor2){
 	return result;
 }
 
-largeNum largeNum::operator/(largeNum& divisor) {
-	if (this->compare(divisor)==-1) throw "Fractions or float-point numbers are not yet supported!\n";
+largeNum largeNum::operator/(largeNum& divisor)
+{
+	//TODO
+	//somehow 2 digit divisors still don't work
+	//some numbers just don't work correctly e.g. 999/3 returns 30 instead of 333, gotta chech into that otherwise well done!
+	if (this->compare(divisor) == -1) throw "Fractions or float-point numbers are not yet supported!\n";
 	if (*this == divisor) return one;
-	if (divisor == zero) throw "Division by zero is dangerous man!\n";
+	if (divisor == zero) throw "Division by zero is dangerous, man!\n";
 	if (divisor == one) return *this; // x/1 = x
+
+	//macros
 
 	largeNum tmp1 = *this;
 	largeNum tmp2 = divisor;
+	largeNum compareVal1 = *this;
+	largeNum compareVal2 = divisor;
 	largeNum result = zero;
+	largeNum temporary = zero;
+	largeNum reminder = zero;
+	long long iterator = 0;
+	int currResult = 0;
 
-	//macros	
-	std::vector<int> tValue = tmp1.getValue();
-	std::vector<int> dValue = tmp2.getValue();
+	//macros
+	std::vector<int>& divValue = tmp1.getValue();
+	std::vector<int>& dValue = tmp2.getValue();
 	std::vector<int>& rValue = result.getValue();
+	std::vector<int>& tempVal = temporary.getValue();
 
-	if (tmp1.sign == tmp2.sign) result.sign = '+';
+	tmp1.toPositive();
+	tmp2.toPositive();
+	compareVal1.toPositive();
+	compareVal2.toPositive();
+		
+	//goes from left to right subtracting every time and then adding a result	
+	while (result*compareVal2 < compareVal1 - compareVal2 + one)
+	{			
+		//drags down so many digits until it can actually be subtracted
+		while (temporary < tmp2)
+		{
+			tempVal.push_back(divValue.at(iterator));
+			if (tempVal.at(0) == 0)tempVal.erase(tempVal.begin());
+			iterator++;
+		}
+		//removes the digits from the first number corresponding to the amount of digits added to the temporary one
+		for (uint i = 0; i < tempVal.size(); i++)
+		{
+			if (divValue.size() == 0)break;
+			divValue.erase(divValue.begin());
+		}
+
+		//subtracts the divisor from the temporary result and adds a corresponding result every time.
+		while (temporary - tmp2 >= zero)
+		{
+			temporary -= tmp2;
+			currResult++;
+		}
+
+		//inserts the previously calculated result in the end result
+		if (rValue.at(0) == 0) rValue.at(0) = currResult;
+		else rValue.insert(rValue.end(), currResult);
+		currResult = 0;
+		iterator = 0;
+	}
+	while (rValue.at(0) == 0)rValue.erase(rValue.begin());
+	if (this->sign == divisor.sign) result.sign = '+';
 	else result.sign = '-';
 	return result;
 }
@@ -347,18 +459,21 @@ largeNum largeNum::operator/(largeNum& divisor) {
   ##########OPERATOR-EQUALS OPERATORS##########
   #############################################*/
 
-largeNum largeNum::operator+=(largeNum& addent) {
+largeNum largeNum::operator+=(largeNum& addent)
+{
 	*this = *this + addent;
 	return *this;
 }
 
-largeNum largeNum::operator-=(largeNum& subtrahend) {
+largeNum largeNum::operator-=(largeNum& subtrahend)
+{
 	*this = *this - subtrahend;
 	return *this;
 }
 
-largeNum largeNum::operator*=(largeNum& factor){
-	*this = *this*factor;
+largeNum largeNum::operator*=(largeNum& factor)
+{
+	*this = *this * factor;
 	return *this;
 }
 
@@ -366,29 +481,34 @@ largeNum largeNum::operator*=(largeNum& factor){
   ##########INCREMENT OPERATORS##########
   #######################################*/
 
-largeNum largeNum::operator++ (int x) {
+largeNum largeNum::operator++(int x)
+{
 	largeNum tmp(*this);
 	*this += one;
 	return tmp;
 }
 
-largeNum largeNum::operator++() {
+largeNum largeNum::operator++()
+{
 	*this += one;
 	return *this;
 }
 
-largeNum largeNum::operator-- (int x) {
+largeNum largeNum::operator--(int x)
+{
 	largeNum tmp(*this);
 	*this -= one;
 	return tmp;
 }
 
-largeNum largeNum::operator--() {
+largeNum largeNum::operator--()
+{
 	*this -= one;
 	return *this;
 }
 
-largeNum largeNum::operator -(){
+largeNum largeNum::operator -()
+{
 	largeNum result = *this;
 	result.changeSign();
 	return result;
@@ -398,59 +518,64 @@ largeNum largeNum::operator -(){
   #########COMPARISON OPERATORS#########
   ######################################*/
 
-bool largeNum::operator==(largeNum& test) {
+bool largeNum::operator==(largeNum& test)
+{
 	if (this->sign != test.sign) return false;
-	return (this->compare(test) == 0)? true : false;
+	return (this->compare(test) == 0) ? true : false;
 }
 
-bool largeNum::operator>(largeNum& test) {
+bool largeNum::operator>(largeNum& test)
+{
 	if (this->sign == '+' && test.sign == '-') return true;
 	if (this->sign != test.sign) return false;
-	if (this->sign == '+' && test.sign == '+') {
+	if (this->sign == '+' && test.sign == '+')
+	{
 		if (this->compare(test) == 0) return false;
-		if (this->compare(test) ==-1) return false;
+		if (this->compare(test) == -1) return false;
 		return true;
 	}
-	else {
-		if (this->compare(test) == 0) return false;
-		if (this->compare(test) == 1) return false;
-		return true;
-	}
-}
-
-bool largeNum::operator<(largeNum& test) {
-	if (this->sign == '-' && test.sign == '+') return true;
-	else if (this->sign != test.sign) return false;
-	if (this->sign == '+' && test.sign == '+') {
-		if (this->compare(test) == 0) return false;
-		if (this->compare(test) == 1) return false;
-		return true;
-	}
-	else {
-		if (this->compare(test) == 0) return false;
-		if (this->compare(test) ==-1) return false;
-		return true;
-	}
-}
-
-bool largeNum::operator<=(largeNum& test) {
-	if (*this == test) return true;
-	if (*this  < test) return true;
-	else return false;
-}
-
-bool largeNum::operator>=(largeNum& test) {
-	if (*this == test) return true;
-	if (*this  > test) return true;
-	else return false;
-}
-
-bool largeNum::operator !=(largeNum& test){
-	if (*this==test) return false;
+	if (this->compare(test) == 0) return false;
+	if (this->compare(test) == 1) return false;
 	return true;
 }
 
-bool largeNum::operator !(){
-	if (this->getValue().size() > 0) return false;
+bool largeNum::operator<(largeNum& test)
+{
+	if (this->sign == '-' && test.sign == '+') return true;
+	if (this->sign != test.sign) return false;
+	if (this->sign == '+' && test.sign == '+')
+	{
+		if (this->compare(test) == 0) return false;
+		if (this->compare(test) == 1) return false;
+		return true;
+	}
+	if (this->compare(test) == 0) return false;
+	if (this->compare(test) == -1) return false;
+	return true;
+}
+
+bool largeNum::operator<=(largeNum& test)
+{
+	if (*this == test) return true;
+	if (*this < test) return true;
+	return false;
+}
+
+bool largeNum::operator>=(largeNum& test)
+{
+	if (*this == test) return true;
+	if (*this > test) return true;
+	return false;
+}
+
+bool largeNum::operator !=(largeNum& test)
+{
+	if (*this == test) return false;
+	return true;
+}
+
+bool largeNum::operator !()
+{
+	if (this->getValue().size() == 0 && this->getValue().at(0) != 0) return false;
 	return true;
 }
