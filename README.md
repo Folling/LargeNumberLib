@@ -1,6 +1,6 @@
 a library to handle very large Numbers for calculations
 
- 1. **Already working :**
+ **1. Already working :**
   * Addition
   * Subtraction
   * Negative Values
@@ -9,10 +9,10 @@ a library to handle very large Numbers for calculations
   * increment operators;
   * multiplication
   
-  2. **Somewhat working, still getting Exceptions at times:**
+ **2. Somewhat working, still getting Exceptions at times :**
   * division
   * and thus the /= operator and the % and %= operators won't take long
   
- 3. 
+ **3. To be implemented :** 
  * higher math functions (pow(); log(); etc.)
  * floating point numbers
