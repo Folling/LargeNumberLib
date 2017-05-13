@@ -8,11 +8,11 @@ a library to handle very large Numbers for calculations
   * Modulus
   * Negative Values
   * Comparison of two numbers
-  * operator.equals operators (+=, -=, *=, /= and %=)
-  * increment operators;
+  * Operator.equals operators (+=, -=, *=, /= and %=)
+  * Increment operators;
   
  2. **Things to be implemented soon** 
-  * higher math functions (pow(); log(); etc.)
+  * Higher mathematical functions (pow(); log(); etc.)
   
  3. **Things I basically don't want to work on but will implement at one point**
-  * floating point numbers
+  * Floating point numbers
