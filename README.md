@@ -1,18 +1,17 @@
 a library to handle very large Numbers for calculations
 
- **1. Already working :**
+ 1. **Already working :**
   * Addition
   * Subtraction
   * Negative Values
   * Comparison of two numbers
-  * operator.equals operators += and -= as well as *=
+  * operator.equals operators += and -=  
   * increment operators;
+  
+ 2. **Somehwat implemented but not yet working**
   * multiplication
   
- **2. Somewhat working, still getting Exceptions at times :**
+ 3. **Things to be implemented soon** 
   * division
-  * and thus the /= operator and the % and %= operators won't take long
-  
- **3. To be implemented :** 
- * higher math functions (pow(); log(); etc.)
- * floating point numbers
+  * the rest of the operator.equals operators
+  * higher math functions (pow(); log(); etc.)

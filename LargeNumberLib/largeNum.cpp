@@ -62,15 +62,27 @@ int largeNum::compare(largeNum& toTest)
 {
 	std::vector<int> tmp1 = this->getValue();
 	std::vector<int> tmp2 = toTest.getValue();
+
+	while (tmp1.at(0) == 0 && tmp1.size() != 1) tmp1.erase(tmp1.begin());
+	while (tmp2.at(0) == 0 && tmp2.size() != 1) tmp2.erase(tmp2.begin());
+
 	if (tmp1.size() > tmp2.size()) return 1;
 	if (tmp1.size() < tmp2.size()) return -1;
 	uint size = tmp1.size();
+
 	for (uint i = 0; i < size; i++)
 	{
 		if (tmp1.at(i) > tmp2.at(i)) return 1;
 		if (tmp1.at(i) < tmp2.at(i)) return -1;
 	}
 	return 0;
+}
+
+largeNum largeNum::removeZerosAtStart()
+{
+	std::vector<int>& sVal = this->getValue();
+	while (sVal.at(0) == 0 && sVal.size() != 1) sVal.erase(sVal.begin());
+	return *this;
 }
 
 largeNum& largeNum::changeSign()
@@ -102,28 +114,33 @@ char largeNum::getSign() const
   ##########SHIFT OPERATORS##########
   ###################################*/
 
-std::istream& operator >> (std::istream& is, largeNum& val) {
+std::istream& operator >>(std::istream& is, largeNum& val)
+{
 	//takes a string as input then 
 	//makes a number out of that stored in a vector
 	std::string s_input;
 	uint i = 0;
 	val.sign = '+';
 	is >> s_input;
-	if (s_input[0] == '-') {
+	if (s_input[0] == '-')
+	{
 		val.sign = '-';
 		s_input.erase(s_input.begin());
 	}
 	if (s_input[0] > 57 || s_input[0] < 48) throw "Error, please enter only one minus sign!\n";
 	std::vector<int> futureValue(s_input.size());
-	try {
-		for (; i < s_input.size(); i++) {
+	try
+	{
+		for (; i < s_input.size(); i++)
+		{
 			futureValue.at(i) = resolveChar(s_input[i]);
 		}
 		val.setValue(futureValue);
-		while (val.getValue().at(0) == 0 && val.getValue().size() != 1) val.getValue().erase(val.getValue().begin());
+		val.removeZerosAtStart();
 		return is;
 	}
-	catch (const char* msg) {
+	catch (const char* msg)
+	{
 		std::cout << msg;
 		return is;
 	}
@@ -132,6 +149,7 @@ std::istream& operator >> (std::istream& is, largeNum& val) {
 std::ostream& operator <<(std::ostream& os, largeNum& outputVal)
 {
 	if (outputVal.sign == '-') std::cout << '-';
+	outputVal.removeZerosAtStart();
 	for (uint i = 0; i < outputVal.getValue().size(); i++)
 	{
 		os << outputVal.getValue().at(i);
@@ -334,6 +352,9 @@ largeNum operator+(largeNum& summand1, largeNum& summand2)
 
 largeNum operator-(largeNum& minuend, largeNum& subtrahend)
 {
+	//since we basically defined subtraction and negative numbers in the + operator 
+	//and subtraction is the counterpart to addition we just return the addition of the
+	//minuend and the negative subtrahend
 	largeNum result = (minuend + -subtrahend);
 	return result;
 }
@@ -378,7 +399,6 @@ largeNum operator*(largeNum& factor1, largeNum& factor2)
 	//the last digit gets removed because there is always a 0 at the end
 	tmp4.erase(tmp4.end() - 1);
 	if (tmp4.size() == 0) return zero;
-	while (tmp4.at(0) == 0) tmp4.erase(tmp4.begin());
 	//since multiplication disregards signs when it comes to value
 	//the end sign is determined by the input signs though.
 	if (factor1.sign == factor2.sign) result.sign = '+';
@@ -388,15 +408,12 @@ largeNum operator*(largeNum& factor1, largeNum& factor2)
 
 largeNum largeNum::operator/(largeNum& divisor)
 {
-	//TODO
-	//somehow 2 digit divisors still don't work
-	//some numbers just don't work correctly e.g. 999/3 returns 30 instead of 333, gotta chech into that otherwise well done!
 	if (this->compare(divisor) == -1) throw "Fractions or float-point numbers are not yet supported!\n";
 	if (*this == divisor) return one;
-	if (divisor == zero) throw "Division by zero is dangerous, man!\n";
+	if (divisor == zero) throw "You can't divide by 0!\n";
 	if (divisor == one) return *this; // x/1 = x
 
-	//macros
+	//macros and declarations
 
 	largeNum tmp1 = *this;
 	largeNum tmp2 = divisor;
@@ -406,9 +423,11 @@ largeNum largeNum::operator/(largeNum& divisor)
 	largeNum temporary = zero;
 	largeNum reminder = zero;
 	long long iterator = 0;
+	long long dragCount = 0;
 	int currResult = 0;
+	//when only doing the first round
+	//as in when you drag down as many digits as you want until it suits you
 
-	//macros
 	std::vector<int>& divValue = tmp1.getValue();
 	std::vector<int>& dValue = tmp2.getValue();
 	std::vector<int>& rValue = result.getValue();
@@ -418,50 +437,63 @@ largeNum largeNum::operator/(largeNum& divisor)
 	tmp2.toPositive();
 	compareVal1.toPositive();
 	compareVal2.toPositive();
-		
 	//goes from left to right subtracting every time and then adding a result	
-	while (result*compareVal2 < compareVal1 - compareVal2 + one)
-	{			
+	while (result * compareVal2 < compareVal1 - compareVal2 + one)
+	{
 		//drags down so many digits until it can actually be subtracted
 		while (temporary < tmp2)
 		{
+			//to prevent out of range when having calculations with 0s in the divident
+			if (divValue.at(0) == 0 && divValue.size() == 0) break;
+			if (dragCount >= 1)
+			{
+				rValue.push_back(0);
+			}
 			tempVal.push_back(divValue.at(iterator));
-			if (tempVal.at(0) == 0)tempVal.erase(tempVal.begin());
+			dragCount++;
 			iterator++;
 		}
+		dragCount = 0;
+		temporary.removeZerosAtStart();
 		//removes the digits from the first number corresponding to the amount of digits added to the temporary one
 		for (uint i = 0; i < tempVal.size(); i++)
 		{
-			if (divValue.size() == 0)break;
+			if (divValue.size() == 1)break;
 			divValue.erase(divValue.begin());
 		}
 
 		//subtracts the divisor from the temporary result and adds a corresponding result every time.
 		while (temporary - tmp2 >= zero)
 		{
+			if (tmp2 == zero) break;
 			temporary -= tmp2;
 			currResult++;
 		}
-
 		//inserts the previously calculated result in the end result
-		if (rValue.at(0) == 0) rValue.at(0) = currResult;
-		else rValue.insert(rValue.end(), currResult);
+		rValue.insert(rValue.end(), currResult);
 		currResult = 0;
 		iterator = 0;
 	}
-	while (rValue.at(0) == 0)rValue.erase(rValue.begin());
+	result.removeZerosAtStart();
 	if (this->sign == divisor.sign) result.sign = '+';
 	else result.sign = '-';
 	return result;
 }
 
+largeNum largeNum::operator%(largeNum& divisor)
+{
+	//returns the reminder of a division
+	return *this - (*this / divisor)*divisor;
+}
+
+
 /*#############################################
   ##########OPERATOR-EQUALS OPERATORS##########
   #############################################*/
 
-largeNum largeNum::operator+=(largeNum& addent)
+largeNum largeNum::operator+=(largeNum& divisor)
 {
-	*this = *this + addent;
+	*this = *this + divisor;
 	return *this;
 }
 
@@ -474,6 +506,18 @@ largeNum largeNum::operator-=(largeNum& subtrahend)
 largeNum largeNum::operator*=(largeNum& factor)
 {
 	*this = *this * factor;
+	return *this;
+}
+
+largeNum largeNum::operator/=(largeNum& divisor)
+{
+	*this = *this / divisor;
+	return *this;
+}
+
+largeNum largeNum::operator%=(largeNum& divisor)
+{
+	*this = *this % divisor;
 	return *this;
 }
 

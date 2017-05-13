@@ -20,12 +20,13 @@ public:
 	explicit largeNum(char x);
 	~largeNum();
 public:
-	std::vector<int>& getValue();
-	void setValue(const std::vector<int>& input);
-	int compare(largeNum& toTest);
+	largeNum largeNum::removeZerosAtStart();
 	largeNum& changeSign();	
 	largeNum& toNegative();
 	largeNum& toPositive();
+	std::vector<int>& getValue();
+	void setValue(const std::vector<int>& input);
+	int compare(largeNum& toTest);	
 	char getSign() const;
 public:
 	largeNum factorial();
@@ -36,7 +37,7 @@ public:
 	friend largeNum	     operator  - (largeNum& minuend, largeNum& subtrahend);
 	friend largeNum		 operator  * (largeNum& factor1, largeNum& factor2   );
 	largeNum			 operator  / (largeNum& divisor					     );
-	friend largeNum operator%(largeNum& dividend, largeNum& divisor);
+	largeNum operator%(largeNum& divisor);
 public:
 	//largeNum operator =(largeNum& setTo		);
 	template<typename T> largeNum operator = (T setTo);
