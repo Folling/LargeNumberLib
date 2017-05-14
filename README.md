@@ -3,16 +3,15 @@ a library to handle very large Numbers for calculations
  1. **Already working :**
   * Addition
   * Subtraction
-  * Multiplication
-  * Division
-  * Modulus
   * Negative Values
   * Comparison of two numbers
-  * Operator.equals operators (+=, -=, *=, /= and %=)
-  * Increment operators;
+  * operator.equals operators += and -=  
+  * increment operators;
   
- 2. **Things to be implemented soon** 
-  * Higher mathematical functions (pow(); log(); etc.)
+ 2. **Somehwat implemented but not yet working**
+  * multiplication
   
- 3. **Things I basically don't want to work on but will implement at one point**
-  * Floating point numbers
+ 3. **Things to be implemented soon** 
+  * division
+  * the rest of the operator.equals operators
+  * higher math functions (pow(); log(); etc.)

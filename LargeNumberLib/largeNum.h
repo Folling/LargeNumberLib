@@ -13,53 +13,55 @@ class largeNum
 {
 public:
 	largeNum();
-	largeNum(largeNum &x);
+	largeNum(const largeNum& toSet) = default;
 	template <typename T>
-	explicit largeNum(T x);
+	explicit largeNum(T x          );
 	explicit largeNum(std::string x);
-	explicit largeNum(char x);
+	explicit largeNum(char x       );
 	~largeNum();
 public:
-	largeNum largeNum::removeZerosAtStart();
-	largeNum& changeSign();	
-	largeNum& toNegative();
-	largeNum& toPositive();
-	std::vector<int>& getValue();
+	std::vector<int>& getValue() const;
+	char getSign()               const;
 	void setValue(const std::vector<int>& input);
-	int compare(largeNum& toTest);	
-	char getSign() const;
+public:
+	largeNum largeNum::removeZerosAtStart() const;
+	int compare(const largeNum& toTest) const;		
+	largeNum& toNegative()		       ;
+	largeNum& toPositive()		       ;
+	largeNum& changeSign()			   ;
 public:
 	largeNum factorial();
 public:
 	friend std::istream& operator >> (std::istream& is, largeNum& iutputVal  );
-	friend std::ostream& operator << (std::ostream& os, largeNum& outputVal  );
-	friend largeNum		 operator  + (largeNum& summand1, largeNum& summand2 );
-	friend largeNum	     operator  - (largeNum& minuend, largeNum& subtrahend);
-	friend largeNum		 operator  * (largeNum& factor1, largeNum& factor2   );
-	largeNum			 operator  / (largeNum& divisor					     );
-	largeNum operator%(largeNum& divisor);
+	friend std::ostream& operator << (std::ostream& os, const largeNum& outputVal  );
 public:
-	//largeNum operator =(largeNum& setTo		);
-	template<typename T> largeNum operator = (T setTo);
-	largeNum operator+=(largeNum& addent	);
-	largeNum operator-=(largeNum& subtrahend);
-	largeNum operator*=(largeNum& addent	);
-	largeNum operator/=(largeNum& addent	);
-	largeNum operator%=(largeNum& addent	);
-	largeNum operator++ (int x);
-	largeNum operator-- (int x);
-	largeNum operator++ (     );
-	largeNum operator-- (     );
-	largeNum operator - (     );	
+	largeNum operator  + (const largeNum& summand) const;
+	largeNum operator  - (const largeNum& summand) const;
+	largeNum operator  * (const largeNum& summand) const;
+	largeNum operator  / (const largeNum& summand) const;
+	largeNum operator  % (const largeNum& summand) const;
 public:
-	bool operator ==(largeNum& test);
-	bool operator > (largeNum& test);
-	bool operator < (largeNum& test);
-	bool operator >=(largeNum& test);
-	bool operator <=(largeNum& test);
-	bool operator !=(largeNum& test);
-	bool operator  !();
-
+	template<typename T> largeNum operator = (const T setTo);
+	largeNum operator += (const largeNum& divisor);
+	largeNum operator -= (const largeNum& divisor);
+	largeNum operator *= (const largeNum& divisor);
+	largeNum operator /= (const largeNum& divisor);
+	largeNum operator %= (const largeNum& divisor);
+public:
+	largeNum operator ++ (int x);
+	largeNum operator -- (int x);
+	largeNum operator ++ (     );
+	largeNum operator -- (     );
+	largeNum operator -  (     );
+	largeNum operator -  (     ) const;
+public:
+	bool operator == (const largeNum& test) const;
+	bool operator >  (const largeNum& test) const;
+	bool operator <  (const largeNum& test) const;
+	bool operator >= (const largeNum& test) const;
+	bool operator <= (const largeNum& test) const;
+	bool operator != (const largeNum& test) const;
+	bool operator !  (                    ) const;
 private:
 	std::vector<int> value;
 	char sign;
@@ -83,7 +85,7 @@ template <typename T> largeNum::largeNum(T input) {
 	this->sign = (isNegative == true) ? '-' : '+';
 }
 
-template <typename T> largeNum largeNum::operator=(T setTo) {
+template <typename T> largeNum largeNum::operator=(const T setTo) {
 	largeNum tmp(setTo);
 	while (tmp.getValue().at(0) == 0)tmp.getValue().erase(tmp.getValue().begin());
 	*this = tmp;

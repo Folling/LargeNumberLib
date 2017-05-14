@@ -7,10 +7,12 @@
 'LargeNumberLib.exe' (Win32): Loaded 'C:\Windows\SysWOW64\msvcp140d.dll'. Cannot find or open the PDB file.
 'LargeNumberLib.exe' (Win32): Loaded 'C:\Windows\SysWOW64\vcruntime140d.dll'. Cannot find or open the PDB file.
 'LargeNumberLib.exe' (Win32): Loaded 'C:\Windows\SysWOW64\ucrtbased.dll'. Cannot find or open the PDB file.
-'LargeNumberLib.exe' (Win32): Loaded 'C:\Windows\SysWOW64\vcruntime140d.dll'. Cannot find or open the PDB file.
-'LargeNumberLib.exe' (Win32): Unloaded 'C:\Windows\SysWOW64\vcruntime140d.dll'
 'LargeNumberLib.exe' (Win32): Loaded 'C:\Windows\SysWOW64\ucrtbased.dll'. Cannot find or open the PDB file.
 'LargeNumberLib.exe' (Win32): Unloaded 'C:\Windows\SysWOW64\ucrtbased.dll'
-The thread 0x4bf4 has exited with code 0 (0x0).
-The thread 0x3eb8 has exited with code 0 (0x0).
-The thread 0x4a38 has exited with code 0 (0x0).
+'LargeNumberLib.exe' (Win32): Loaded 'C:\Windows\SysWOW64\vcruntime140d.dll'. Cannot find or open the PDB file.
+'LargeNumberLib.exe' (Win32): Unloaded 'C:\Windows\SysWOW64\vcruntime140d.dll'
+The thread 0xe394 has exited with code -1073741510 (0xc000013a).
+The thread 0xe2a0 has exited with code -1073741510 (0xc000013a).
+The thread 0xdbac has exited with code -1073741510 (0xc000013a).
+The thread 0x1b24 has exited with code -1073741510 (0xc000013a).
+The program '[52284] LargeNumberLib.exe' has exited with code -1073741510 (0xc000013a).
