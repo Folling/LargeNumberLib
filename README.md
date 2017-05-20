@@ -5,13 +5,11 @@ a library to handle very large Numbers for calculations
   * Subtraction
   * Negative Values
   * Comparison of two numbers
-  * operator.equals operators += and -=  
+  * operator.equals operators
   * increment operators;
-  
- 2. **Somehwat implemented but not yet working**
-  * multiplication
-  
- 3. **Things to be implemented soon** 
   * division
-  * the rest of the operator.equals operators
-  * higher math functions (pow(); log(); etc.)
+  * floating point number representation and addition for positive floating point numbers
+  
+ 2. **Things to be implemented soon** 
+  * the rest of the floating point numbers
+  * higher mathematical functions
