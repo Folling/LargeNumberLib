@@ -1,17 +1,24 @@
 #include <iostream>
 #include <string>
 #include <conio.h>
-#include "largeNum.h"
-
+#include "largeInt.h"
+#include "largeFloat.h"
+#include <ctime>
 
 int main() {
-	largeNum a, b;
-	const largeNum one(1);
+	largeFloat a;
+	largeFloat b;
+	largeInt c;
+	largeInt d;
 	while (true) {
-		std::cin >> a;
-		std::cin >> b;
 		try {
-			std::cout << (a/b) << std::endl;
+			std::cin >> a;
+			std::cin >> b;
+			clock_t begin = clock();
+			std::cout << a + b << std::endl;
+			clock_t end = clock();
+			double elapsed_secs = static_cast<double>(end - begin)*1000/ CLOCKS_PER_SEC;
+			std::cout << "Time needed :" << elapsed_secs << "ms\n";
 		}
 		catch(const char* msg)
 		{

@@ -31,3 +31,9 @@ int findIntLength(int i_input){
 	return lengthCount;
 
 }
+
+largeInt abs(largeInt& value)
+{
+	value.toPositive();
+	return value;
+}
