@@ -1,5 +1,6 @@
 #include "largeFloat.h"
 
+int largeFloat::precision = 100;
 
 largeFloat::largeFloat()
 {
@@ -308,7 +309,29 @@ largeFloat largeFloat::operator*(const largeFloat& factor) const
 
 largeFloat largeFloat::operator/(const largeFloat& divisor) const
 {
-	return *this;
+	largeInt LNdividend = this->getPreDValue();
+	LNdividend.append(this->getPostDValue());
+	largeInt LNdivisor = divisor.getPreDValue();
+	LNdivisor.append(divisor.getPostDValue());
+	largeFloat result;
+	result.preDecValue = LNdividend / LNdivisor;
+	largeInt reminder = LNdividend % LNdivisor;
+
+	for (uint i = 0; i < this->getPostDValue().size() + divisor.getPostDValue().size(); i++)
+	{
+		result.postDecValue.getValue().insert(result.postDecValue.getValue().begin(), result.getPreDValue()[result.preDecValue.size() - 1]);
+		result.preDecValue.getValue().pop_back();
+	}
+
+	for (int i = 0; i < precision; i++)
+	{
+		if (reminder == 0) break;
+		reminder.push_back(0);
+		result.postDecValue.append(reminder / divisor);
+		reminder %= divisor;
+	}	
+	result.postDecValue.removeZerosAtEnd();
+	return result;
 }
 
 largeFloat largeFloat::operator%(const largeFloat& divisor) const

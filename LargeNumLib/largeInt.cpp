@@ -23,6 +23,27 @@ largeInt:: largeInt(                    )
 	sign = '+';
 }
 
+largeInt::largeInt(long long input)
+{
+	value.resize(19);
+	int i = 1;
+	bool isNegative = false;
+	if (input < 0)
+	{
+		input *= -1;
+		isNegative = true;
+	}
+	while (true)
+	{
+		value.at(value.size() - i) = input % 10;
+		input /= 10;
+		if (input == 0) break;
+		i++;
+	}
+	while (value.at(0) == 0 && value.size() != 1) value.erase(value.begin());
+	this->sign = (isNegative == true) ? '-' : '+';
+}
+
 largeInt:: largeInt(std::string s_input )
 {
 	sign = '+';
@@ -459,13 +480,12 @@ largeInt largeInt::operator* (const largeInt& factor    ) const
 }
 
 largeInt largeInt::operator/ (const largeInt& divisor   ) const
-{
-	if (this->compare(divisor) == -1) throw "Fractions or float-point numbers are not yet supported!\n";
+{	
 	if (*this == divisor) return one;
 	if (divisor == zero) throw "You can't divide by 0!\n";
 	if (divisor == one) return *this; // x/1 = x
 
-									  //macros and declarations
+	//macros and declarations
 
 	int pushedZeros = 0;
 
@@ -547,9 +567,9 @@ largeInt largeInt::operator% (const largeInt& divisor   ) const
   ##########OPERATOR-EQUALS OPERATORS##########
   #############################################*/
 
-largeInt largeInt::operator+= (const largeInt& summant   )
+largeInt largeInt::operator+= (const largeInt& summand   )
 {
-	*this = *this + summant;
+	*this = *this + summand;
 	return *this;
 }
 

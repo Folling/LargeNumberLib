@@ -14,8 +14,7 @@ class largeInt
 public:
 	largeInt();
 	largeInt(const largeInt& toSet) = default;
-	template <typename T>
-	explicit largeInt(T x);
+	explicit largeInt(long long x);
 	explicit largeInt(std::string x);
 	explicit largeInt(char x);
 	~largeInt();
@@ -112,28 +111,6 @@ private:
 	std::vector<int> value;
 	char sign;
 };
-
-template <typename T>
-largeInt::largeInt(T input)
-{
-	value.resize(19);
-	int i = 1;
-	bool isNegative = false;
-	if (input < 0)
-	{
-		input *= -1;
-		isNegative = true;
-	}
-	while (true)
-	{
-		value.at(value.size() - i) = input % 10;
-		input /= 10;
-		if (input == 0) break;
-		i++;
-	}
-	while (value.at(0) == 0 && value.size() != 1) value.erase(value.begin());
-	this->sign = (isNegative == true) ? '-' : '+';
-}
 
 //all the following functions are just the basic operators so they work with any kind 
 //of variable, aka adding a largeInt to a normal int

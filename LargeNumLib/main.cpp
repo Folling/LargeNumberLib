@@ -14,7 +14,7 @@ int main() {
 			std::cin >> a;
 			std::cin >> b;
 			clock_t begin = clock();
-			std::cout << (a * b) << std::endl;
+			std::cout << (a / b) << std::endl;
 			clock_t end = clock();
 			double elapsed_secs = static_cast<double>(end - begin)*1000/ CLOCKS_PER_SEC;
 			std::cout << "Time needed :" << elapsed_secs << "ms\n";

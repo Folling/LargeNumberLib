@@ -47,11 +47,18 @@ public:
 	largeFloat operator ++ (     );
 	largeFloat operator -- (     );
 	largeFloat operator -  (     ) const;
+public:
+	bool operator ==(const largeInt& test) const;
+	bool operator  >(const largeInt& test) const;
+	bool operator  <(const largeInt& test) const;
+	bool operator >=(const largeInt& test) const;
+	bool operator <=(const largeInt& test) const;
+	bool operator !=(const largeInt& test) const;
+	bool operator  !() const;
 private:
 	//Pre and post decimal values
 	largeInt preDecValue;
 	largeInt postDecValue;
 	char sign;
+	static int precision;
 };
-
-
