@@ -9,6 +9,7 @@ int main() {
 	largeFloat b;
 	largeInt c;
 	largeInt d;
+	largeFloat::precision = 1000;
 	while (true) {
 		try {
 			std::cin >> a;

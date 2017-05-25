@@ -23,7 +23,7 @@ largeInt:: largeInt(                    )
 	sign = '+';
 }
 
-largeInt::largeInt(long long input)
+largeInt:: largeInt(long long input     )
 {
 	value.resize(19);
 	int i = 1;
@@ -42,26 +42,6 @@ largeInt::largeInt(long long input)
 	}
 	while (value.at(0) == 0 && value.size() != 1) value.erase(value.begin());
 	this->sign = (isNegative == true) ? '-' : '+';
-}
-
-largeInt:: largeInt(std::string s_input )
-{
-	sign = '+';
-	uint i = 1;
-	if (s_input[0] == '-') sign = '-';
-	else i--;
-	value.resize(s_input.size());
-	for (; i < s_input.size(); i++)
-	{
-		value.at(i) = resolveChar(s_input[i]);
-	}
-}
-
-largeInt:: largeInt(char c_input        )
-{
-	value.resize(1);
-	value.at(0) = resolveChar(c_input);
-	sign = '+';
 }
 
 largeInt::~largeInt(                    )
@@ -642,7 +622,7 @@ int&     largeInt::operator[] (uint index) const
 }
 
 /*########################################
-  ##########COMPARISON OPERATORS###########
+  ##########COMPARISON OPERATORS##########
   ########################################*/
 
 bool largeInt::operator== (const largeInt& test) const
@@ -705,4 +685,116 @@ bool largeInt::operator!  (                    ) const
 {
 	if (this->getValue().size() <= 1 && this->getValue().at(0) != 0) return false;
 	return true;
+}
+
+/*########################################
+  ########NORMAL VALUED OPERATIONS########
+  ########################################*/
+
+  //all the following functions are just the basic operators so they work with any kind 
+  //of variable, aka adding a largeInt to a normal int
+  //they work by using the template constructor above and then doing the average calculation
+
+
+largeInt largeInt::operator+(const long long summand) const
+{
+	largeInt LNsummand(summand);
+	return *this + summand;
+}
+
+largeInt largeInt::operator-(const long long subtrahend) const
+{
+	largeInt LNsummand(subtrahend);
+	return *this - LNsummand;
+}
+
+largeInt largeInt::operator*(const long long factor) const
+{
+	largeInt LNfactor(factor);
+	return *this * LNfactor;
+}
+largeInt largeInt::operator/(const long long divisor) const
+{
+	largeInt LNdivisor(divisor);
+	return *this * LNdivisor;
+}
+
+largeInt largeInt::operator%(const long long divisor) const
+{
+	largeInt LNdivisor(divisor);
+	return *this * LNdivisor;
+}
+
+largeInt& largeInt::operator=(const long long setTo)
+{
+	largeInt tmp(setTo);
+	while (tmp.getValue().at(0) == 0 && tmp.size() != 0)tmp.getValue().erase(tmp.getValue().begin());
+	*this = tmp;
+	return *this;
+}
+
+largeInt largeInt::operator+=(const long long summand)
+{
+	*this = *this + summand;
+	return *this;
+}
+
+largeInt largeInt::operator-=(const long long subtrahend)
+{
+	*this = *this - subtrahend;
+	return *this;
+}
+
+largeInt largeInt::operator*=(const long long factor)
+{
+	*this = *this * factor;
+	return *this;
+}
+
+largeInt largeInt::operator/=(const long long divisor)
+{
+	*this = *this / divisor;
+	return *this;
+}
+
+largeInt largeInt::operator%=(const long long divisor)
+{
+	*this = *this % divisor;
+	return *this;
+}
+
+bool largeInt::operator==(const long long test) const
+{
+	largeInt LNtest(test);
+	return (*this == LNtest);
+}
+
+bool largeInt::operator>(const long long test) const
+{
+	largeInt LNtest(test);
+	return (*this > LNtest);
+}
+
+bool largeInt::operator<(const long long test) const
+{
+	largeInt LNtest(test);
+	return (*this < LNtest);
+}
+
+bool largeInt::operator>=(const long long test) const
+{
+	largeInt LNtest(test);
+	return (*this >= LNtest);
+}
+
+bool largeInt::operator<=(const long long test) const
+{
+	largeInt LNtest(test);
+	return (*this <= LNtest);
+}
+
+bool largeInt::operator!=(const long long test) const
+{
+	largeInt LNtest(test);
+	return (*this != LNtest);
 }

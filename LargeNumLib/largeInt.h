@@ -1,6 +1,5 @@
-#pragma once
-#ifndef _LARGENUM_
-#define _LARGENUM_
+#ifndef _LARGEINT_H
+#define _LARGEINT_H
 
 #include <iostream>
 #include <vector>
@@ -15,8 +14,6 @@ public:
 	largeInt();
 	largeInt(const largeInt& toSet) = default;
 	explicit largeInt(long long x);
-	explicit largeInt(std::string x);
-	explicit largeInt(char x);
 	~largeInt();
 public:
 	std::vector<int>& getValue() const;
@@ -42,41 +39,30 @@ public:
 	friend std::istream& operator >>(std::istream& is, largeInt& iutputVal);
 	friend std::ostream& operator <<(std::ostream& os, const largeInt& outputVal);
 public:
-	largeInt operator +(const largeInt& summand   ) const;
-	largeInt operator -(const largeInt& subtrahend) const;
-	largeInt operator *(const largeInt& factor    ) const;
-	largeInt operator /(const largeInt& divisor   ) const;
-	largeInt operator %(const largeInt& divisor   ) const;
+	largeInt operator +(const largeInt& summand    ) const;
+	largeInt operator -(const largeInt& subtrahend ) const;
+	largeInt operator *(const largeInt& factor     ) const;
+	largeInt operator /(const largeInt& divisor    ) const;
+	largeInt operator %(const largeInt& divisor    ) const;
 public:
-	template <typename T>
-	largeInt operator +(const T summand   ) const;
-	template <typename T>
-	largeInt operator -(const T subtrahend) const;
-	template <typename T>
-	largeInt operator *(const T factor    ) const;
-	template <typename T>
-	largeInt operator /(const T divisor   ) const;
-	template <typename T>
-	largeInt operator %(const T divisor   ) const;
+	largeInt operator +(const long long summand    ) const;
+	largeInt operator -(const long long subtrahend ) const;
+	largeInt operator *(const long long factor     ) const;
+	largeInt operator /(const long long divisor    ) const;
+	largeInt operator %(const long long divisor    ) const;
 public:
-	largeInt operator +=(const largeInt& summand   );
-	largeInt operator -=(const largeInt& subtrahend);
-	largeInt operator *=(const largeInt& factor    );
-	largeInt operator /=(const largeInt& divisor   );
-	largeInt operator %=(const largeInt& divisor   );
+	largeInt operator +=(const largeInt& summand    );
+	largeInt operator -=(const largeInt& subtrahend );
+	largeInt operator *=(const largeInt& factor     );
+	largeInt operator /=(const largeInt& divisor    );
+	largeInt operator %=(const largeInt& divisor    );
 public:
-	template <typename T>
-	largeInt& operator =(const T setTo     );
-	template <typename T>
-	largeInt operator +=(const T summand   );
-	template <typename T>
-	largeInt operator -=(const T subtrahend);
-	template <typename T>
-	largeInt operator *=(const T factor    );
-	template <typename T>
-	largeInt operator /=(const T divisor   );
-	template <typename T>
-	largeInt operator %=(const T divisor   );
+	largeInt& operator  =(const long long setTo      );
+	largeInt  operator +=(const long long summand    );
+	largeInt  operator -=(const long long subtrahend );
+	largeInt  operator *=(const long long factor     );
+	largeInt  operator /=(const long long divisor    );
+	largeInt  operator %=(const long long divisor    );
 public:
 	largeInt operator ++(int x);
 	largeInt operator --(int x);
@@ -85,163 +71,23 @@ public:
 	largeInt operator  -() const;
 	int& operator [](uint index) const;
 public:
-	bool operator ==(const largeInt& test) const;
-	bool operator  >(const largeInt& test) const;
-	bool operator  <(const largeInt& test) const;
-	bool operator >=(const largeInt& test) const;
-	bool operator <=(const largeInt& test) const;
-	bool operator !=(const largeInt& test) const;
-	bool operator  !(                    ) const;
+	bool operator ==(const largeInt& test ) const;
+	bool operator  >(const largeInt& test ) const;
+	bool operator  <(const largeInt& test ) const;
+	bool operator >=(const largeInt& test ) const;
+	bool operator <=(const largeInt& test ) const;
+	bool operator !=(const largeInt& test ) const;
+	bool operator  !(                     ) const;
 public:
-	template <typename T>
-	bool operator ==(const T test) const;
-	template <typename T>
-	bool operator  >(const T test) const;
-	template <typename T>
-	bool operator  <(const T test) const;
-	template <typename T>
-	bool operator >=(const T test) const;
-	template <typename T>
-	bool operator <=(const T test) const;
-	template <typename T>
-	bool operator !=(const T test) const;
-	template <typename T>
-	bool operator  !(            ) const;
+	bool operator ==(const long long test ) const;
+	bool operator  >(const long long test ) const;
+	bool operator  <(const long long test ) const;
+	bool operator >=(const long long test ) const;
+	bool operator <=(const long long test ) const;
+	bool operator !=(const long long test ) const;
 private:
 	std::vector<int> value;
 	char sign;
 };
 
-//all the following functions are just the basic operators so they work with any kind 
-//of variable, aka adding a largeInt to a normal int
-//they work by using the template constructor above and then doing the average calculation
-
-template <typename T>
-largeInt largeInt::operator+(const T summand) const
-{
-	largeInt LNsummand(summand);
-	return *this + summand;
-}
-
-template <typename T>
-largeInt largeInt::operator-(const T subtrahend) const
-{
-	largeInt LNsummand(subtrahend);
-	return *this - subtrahend;
-}
-
-template <typename T>
-largeInt largeInt::operator*(const T factor) const
-{
-	largeInt LNsummand(factor);
-	return *this * factor;
-}
-
-template <typename T>
-largeInt largeInt::operator/(const T divisor) const
-{
-	largeInt LNsummand(divisor);
-	return *this * divisor;
-}
-
-template <typename T>
-largeInt largeInt::operator%(const T divisor) const
-{
-	largeInt LNsummand(divisor);
-	return *this * divisor;
-}
-
-template <typename T>
-largeInt& largeInt::operator=(const T setTo)
-{
-	largeInt& tmp(setTo);
-	while (tmp.getValue().at(0) == 0)tmp.getValue().erase(tmp.getValue().begin());
-	*this = tmp;
-	return *this;
-}
-
-template <typename T>
-largeInt largeInt::operator+=(const T summand)
-{
-	*this = *this + summand;
-	return *this;
-}
-
-template <typename T>
-largeInt largeInt::operator-=(const T subtrahend)
-{
-	*this = *this - subtrahend;
-	return *this;
-}
-
-template <typename T>
-largeInt largeInt::operator*=(const T factor)
-{
-	*this = *this * factor;
-	return *this;
-}
-
-template <typename T>
-largeInt largeInt::operator/=(const T divisor)
-{
-	*this = *this / divisor;
-	return *this;
-}
-
-template <typename T>
-largeInt largeInt::operator%=(const T divisor)
-{
-	*this = *this % divisor;
-	return *this;
-}
-
-template <typename T>
-bool largeInt::operator==(const T test) const
-{
-	largeInt LNtest(test);
-	return (*this == LNtest);
-}
-
-template <typename T>
-bool largeInt::operator>(const T test) const
-{
-	largeInt LNtest(test);
-	return (*this > LNtest);
-}
-
-template <typename T>
-bool largeInt::operator<(const T test) const
-{
-	largeInt LNtest(test);
-	return (*this < LNtest);
-}
-
-template <typename T>
-bool largeInt::operator>=(const T test) const
-{
-	largeInt LNtest(test);
-	return (*this >= LNtest);
-}
-
-template <typename T>
-bool largeInt::operator<=(const T test) const
-{
-	largeInt LNtest(test);
-	return (*this <= LNtest);
-}
-
-template <typename T>
-bool largeInt::operator!=(const T test) const
-{
-	largeInt LNtest(test);
-	return (*this != LNtest);
-}
-
-template <typename T>
-bool largeInt::operator!() const
-{
-	largeInt LNtest(*this);
-	return !LNtest;
-}
-
-#endif
+#endif // LARGEINT_H

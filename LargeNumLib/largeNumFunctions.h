@@ -2,6 +2,8 @@
 #define _LNFUNCTIONS_
 
 #include "largeInt.h"
+
+class largeFloat;
 class largeInt;
 
 int resolveChar(char c_input);

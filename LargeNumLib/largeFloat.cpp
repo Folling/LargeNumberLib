@@ -30,6 +30,11 @@ largeInt& largeFloat::getPostDValue() const
 	return const_cast<largeFloat*>(this)->postDecValue;
 }
 
+int largeFloat::getPrecision() const
+{
+	return precision;
+}
+
 char largeFloat::getSign() const
 {
 	return this->sign;
@@ -87,7 +92,7 @@ largeFloat& largeFloat::removeZerosAtStart()
 largeFloat& largeFloat::removeZerosAtEnd()
 {
 	largeInt& sVal = this->getPostDValue();
-	while (sVal.getValue().back() == 0 && sVal.size() != 0) sVal.getValue().erase(sVal.getValue().end() - 1);
+	while (sVal.getValue().back() == 0 && sVal.size() != 0) sVal.popEnd();
 	return *this;
 }
 
@@ -120,9 +125,15 @@ largeFloat largeFloat::adaptSigns()
 	return *this;
 }
 
+void setPrecision(const int toSet)
+{
+	largeFloat::precision = toSet;
+}
+
 /*#################################
 ##########I-O OPERATORS##########
 #################################*/
+
 
 std::istream& operator >>(std::istream& is, largeFloat& val)
 {
@@ -232,7 +243,7 @@ largeFloat largeFloat::operator+(const largeFloat& summand) const
 	//otherwise this gets a little tricky
 	//if either of the sizes is just 0 we can set them to just the other
 	if (summand1.size() == 0) rPostDVal = summand2;
-	if (summand2.size() == 0) rPostDVal = summand1;
+	else if (summand2.size() == 0) rPostDVal = summand1;
 
 	//otherwise we'll calculate it
 	else
@@ -322,28 +333,27 @@ largeFloat largeFloat::operator/(const largeFloat& divisor) const
 		result.postDecValue.getValue().insert(result.postDecValue.getValue().begin(), result.getPreDValue()[result.preDecValue.size() - 1]);
 		result.preDecValue.getValue().pop_back();
 	}
+	bool wasZero = false;
+	if (result.postDecValue == 0) wasZero = true;
 
+	result.postDecValue.removeZerosAtEnd();
 	for (int i = 0; i < precision; i++)
 	{
-		if (reminder == 0) break;
 		reminder.push_back(0);
-		result.postDecValue.append(reminder / divisor);
-		reminder %= divisor;
-	}	
-	result.postDecValue.removeZerosAtEnd();
+		if (reminder == 0) break;			
+		result.postDecValue.append(reminder / LNdivisor);
+		reminder %= LNdivisor;
+	}
+	if (wasZero) result.postDecValue.popFront();
+	result.sign = (this->sign == divisor.sign) ? '+' : '-';
 	return result;
-}
-
-largeFloat largeFloat::operator%(const largeFloat& divisor) const
-{
-	return *this;
 }
 
 /*#############################################
   ##########OPERATOR-EQUALS OPERATORS##########
   #############################################*/
 
-largeFloat largeFloat::operator+=(const largeFloat& summand)
+largeFloat largeFloat::operator+=(const largeFloat& summand   )
 {
 	*this = *this + summand;
 	return *this;
@@ -351,21 +361,19 @@ largeFloat largeFloat::operator+=(const largeFloat& summand)
 
 largeFloat largeFloat::operator-=(const largeFloat& subtrahend)
 {
+	*this = *this - subtrahend;
 	return *this;
 }
 
-largeFloat largeFloat::operator*=(const largeFloat& factor)
+largeFloat largeFloat::operator*=(const largeFloat& factor    )
 {
+	*this = *this * factor;
 	return *this;
 }
 
-largeFloat largeFloat::operator/=(const largeFloat& divisor)
+largeFloat largeFloat::operator/=(const largeFloat& divisor   )
 {
-	return *this;
-}
-
-largeFloat largeFloat::operator%=(const largeFloat& divisor)
-{
+	*this = *this / divisor;
 	return *this;
 }
 
