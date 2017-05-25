@@ -11,6 +11,41 @@ largeFloat::largeFloat()
 	sign = '+';
 }
 
+largeFloat::largeFloat(long double x)
+{
+	sign = x < 0 ? '-' : '+';
+	preDecValue = static_cast <long long>(x);
+	long double temp = x - static_cast <long long>(x);
+	while (temp - static_cast <long long>(temp) != 0) temp *= 10;
+	postDecValue = static_cast <long long>(temp);
+	adaptSigns();
+}
+
+largeFloat::largeFloat(long long x, int decPos)
+{
+	sign = x < 0 ? '-' : '+';
+	preDecValue = x;
+	if (decPos == 0) return;
+	int counter = preDecValue.size() - decPos;
+	if (decPos < 0)
+	{
+		decPos *= -1;
+		postDecValue = x;
+		preDecValue = 0;
+		while (--decPos)
+		{
+			postDecValue.getValue().insert(postDecValue.getValue().begin(), 0);
+		}
+		return;
+	}
+	while(--counter)
+	{		
+		postDecValue.getValue().insert(postDecValue.getValue().begin(), preDecValue.getValue().back());
+		preDecValue.popEnd();
+		postDecValue.removeZerosAtEnd();
+	}
+	adaptSigns();
+}
 
 largeFloat::~largeFloat()
 {
@@ -125,11 +160,6 @@ largeFloat largeFloat::adaptSigns()
 	return *this;
 }
 
-void setPrecision(const int toSet)
-{
-	largeFloat::precision = toSet;
-}
-
 /*#################################
 ##########I-O OPERATORS##########
 #################################*/
@@ -210,7 +240,7 @@ std::ostream& operator <<(std::ostream& os, const largeFloat& outputVal)
   ##########ARITHMETIC OPERATORS##########
   ########################################*/
 
-largeFloat largeFloat::operator+(const largeFloat& summand) const
+largeFloat largeFloat::operator+ (const largeFloat& summand    ) const
 {
 	//basic macros
 	largeFloat result;
@@ -290,12 +320,12 @@ largeFloat largeFloat::operator+(const largeFloat& summand) const
 	return result;
 }
 
-largeFloat largeFloat::operator-(const largeFloat& subtrahend) const
+largeFloat largeFloat::operator- (const largeFloat& subtrahend ) const
 {
 	return *this + -subtrahend;
 }
 
-largeFloat largeFloat::operator*(const largeFloat& factor) const
+largeFloat largeFloat::operator* (const largeFloat& factor     ) const
 {
 	//factors to multiply: x.y * w.z = wy * wz and then moving the decimal point
 	largeInt factor1 = this->getPreDValue();
@@ -318,7 +348,7 @@ largeFloat largeFloat::operator*(const largeFloat& factor) const
 	return result;
 }
 
-largeFloat largeFloat::operator/(const largeFloat& divisor) const
+largeFloat largeFloat::operator/ (const largeFloat& divisor    ) const
 {
 	largeInt LNdividend = this->getPreDValue();
 	LNdividend.append(this->getPostDValue());
@@ -353,53 +383,110 @@ largeFloat largeFloat::operator/(const largeFloat& divisor) const
   ##########OPERATOR-EQUALS OPERATORS##########
   #############################################*/
 
-largeFloat largeFloat::operator+=(const largeFloat& summand   )
+largeFloat largeFloat::operator+= (const largeFloat& summand    )
 {
 	*this = *this + summand;
 	return *this;
 }
 
-largeFloat largeFloat::operator-=(const largeFloat& subtrahend)
+largeFloat largeFloat::operator-= (const largeFloat& subtrahend )
 {
 	*this = *this - subtrahend;
 	return *this;
 }
 
-largeFloat largeFloat::operator*=(const largeFloat& factor    )
+largeFloat largeFloat::operator*= (const largeFloat& factor     )
 {
 	*this = *this * factor;
 	return *this;
 }
 
-largeFloat largeFloat::operator/=(const largeFloat& divisor   )
+largeFloat largeFloat::operator/= (const largeFloat& divisor    )
 {
 	*this = *this / divisor;
 	return *this;
 }
 
-largeFloat largeFloat::operator++(int x)
+largeFloat largeFloat::operator++ (int x)
 {
+	largeFloat temp = *this;
+	this->preDecValue++;
+	return temp;
+}
+
+largeFloat largeFloat::operator-- (int x)
+{
+	largeFloat temp = *this;
+	this->preDecValue++;
+	return temp;
+}
+
+largeFloat largeFloat::operator++ ()
+{
+	this->preDecValue++;
 	return *this;
 }
 
-largeFloat largeFloat::operator--(int x)
+largeFloat largeFloat::operator-- ()
 {
+	this->preDecValue--;
 	return *this;
 }
 
-largeFloat largeFloat::operator++()
-{
-	return *this;
-}
-
-largeFloat largeFloat::operator--()
-{
-	return *this;
-}
-
-largeFloat largeFloat::operator-() const
+largeFloat largeFloat::operator - () const
 {
 	largeFloat temp = const_cast<largeFloat&>(*this);
 	temp.changeSign();
 	return temp;
+}
+
+/*########################################
+  ##########COMPARISON OPERATORS##########
+  ########################################*/
+
+
+bool largeFloat::operator== (const largeFloat& test ) const
+{
+	if (this->preDecValue == test.preDecValue && this->postDecValue == test.postDecValue) return true;
+	return false;
+} 
+
+bool largeFloat::operator > (const largeFloat& test ) const
+{
+	if (this->preDecValue  > test.preDecValue) return true;	
+	if (this->postDecValue > test.postDecValue) return true;
+	return false;
+}
+
+bool largeFloat::operator < (const largeFloat& test ) const
+{
+	if (this->preDecValue  < test.preDecValue) return true;
+	if (this->postDecValue < test.postDecValue) return true;
+	return false;
+}
+
+bool largeFloat::operator>= (const largeFloat& test ) const
+{
+	if (this->preDecValue  >= test.preDecValue) return true;
+	if (this->postDecValue >= test.postDecValue) return true;
+	return false;
+}
+
+bool largeFloat::operator<= (const largeFloat& test ) const
+{
+	if (this->preDecValue  <= test.preDecValue) return true;
+	if (this->postDecValue <= test.postDecValue) return true;
+	return false;
+}
+
+bool largeFloat::operator!= (const largeFloat& test ) const
+{
+	if (*this == test) return false;
+	return true;
+}
+
+bool largeFloat::operator!  (                       ) const
+{
+	if (this->preDecValue.size() == 0 && this->postDecValue == 0) return true;
+	return false;
 }

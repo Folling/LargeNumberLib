@@ -39,45 +39,45 @@ public:
 	friend std::istream& operator >>(std::istream& is, largeInt& iutputVal);
 	friend std::ostream& operator <<(std::ostream& os, const largeInt& outputVal);
 public:
-	largeInt operator +(const largeInt& summand    ) const;
-	largeInt operator -(const largeInt& subtrahend ) const;
-	largeInt operator *(const largeInt& factor     ) const;
-	largeInt operator /(const largeInt& divisor    ) const;
-	largeInt operator %(const largeInt& divisor    ) const;
+	largeInt operator+ (const largeInt& summand    ) const;
+	largeInt operator- (const largeInt& subtrahend ) const;
+	largeInt operator* (const largeInt& factor     ) const;
+	largeInt operator/ (const largeInt& divisor    ) const;
+	largeInt operator% (const largeInt& divisor    ) const;
 public:
-	largeInt operator +(const long long summand    ) const;
-	largeInt operator -(const long long subtrahend ) const;
-	largeInt operator *(const long long factor     ) const;
-	largeInt operator /(const long long divisor    ) const;
-	largeInt operator %(const long long divisor    ) const;
+	largeInt operator+(const long long summand    ) const;
+	largeInt operator-(const long long subtrahend ) const;
+	largeInt operator*(const long long factor     ) const;
+	largeInt operator/(const long long divisor    ) const;
+	largeInt operator%(const long long divisor    ) const;
 public:
-	largeInt operator +=(const largeInt& summand    );
-	largeInt operator -=(const largeInt& subtrahend );
-	largeInt operator *=(const largeInt& factor     );
-	largeInt operator /=(const largeInt& divisor    );
-	largeInt operator %=(const largeInt& divisor    );
+	largeInt operator+= (const largeInt& summand    );
+	largeInt operator-= (const largeInt& subtrahend );
+	largeInt operator*= (const largeInt& factor     );
+	largeInt operator/= (const largeInt& divisor    );
+	largeInt operator%= (const largeInt& divisor    );
 public:
-	largeInt& operator  =(const long long setTo      );
-	largeInt  operator +=(const long long summand    );
-	largeInt  operator -=(const long long subtrahend );
-	largeInt  operator *=(const long long factor     );
-	largeInt  operator /=(const long long divisor    );
-	largeInt  operator %=(const long long divisor    );
+	largeInt& operator = (const long long setTo      );
+	largeInt  operator+= (const long long summand    );
+	largeInt  operator-= (const long long subtrahend );
+	largeInt  operator*= (const long long factor     );
+	largeInt  operator/= (const long long divisor    );
+	largeInt  operator%= (const long long divisor    );
 public:
-	largeInt operator ++(int x);
-	largeInt operator --(int x);
-	largeInt operator ++();
-	largeInt operator --();
-	largeInt operator  -() const;
+	largeInt operator++ (int x);
+	largeInt operator-- (int x);
+	largeInt operator++ ();
+	largeInt operator-- ();
+	largeInt operator - () const;
 	int& operator [](uint index) const;
 public:
-	bool operator ==(const largeInt& test ) const;
-	bool operator  >(const largeInt& test ) const;
-	bool operator  <(const largeInt& test ) const;
-	bool operator >=(const largeInt& test ) const;
-	bool operator <=(const largeInt& test ) const;
-	bool operator !=(const largeInt& test ) const;
-	bool operator  !(                     ) const;
+	bool operator== (const largeInt& test ) const;
+	bool operator > (const largeInt& test ) const;
+	bool operator < (const largeInt& test ) const;
+	bool operator>= (const largeInt& test ) const;
+	bool operator<= (const largeInt& test ) const;
+	bool operator!= (const largeInt& test ) const;
+	bool operator ! (                     ) const;
 public:
 	bool operator ==(const long long test ) const;
 	bool operator  >(const long long test ) const;

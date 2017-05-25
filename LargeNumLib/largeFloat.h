@@ -8,6 +8,8 @@ class largeFloat
 {
 public:
 	largeFloat();
+	explicit largeFloat(long double);
+	largeFloat(long long x, int decPos);
 	largeFloat(const largeFloat& toSet) = default;
 	~largeFloat();
 public:
@@ -45,13 +47,13 @@ public:
 	largeFloat operator -- (     );
 	largeFloat operator -  (     ) const;
 public:
-	bool operator ==(const largeFloat& test) const;
-	bool operator  >(const largeFloat& test) const;
-	bool operator  <(const largeFloat& test) const;
-	bool operator >=(const largeFloat& test) const;
-	bool operator <=(const largeFloat& test) const;
-	bool operator !=(const largeFloat& test) const;
-	bool operator  !(                      ) const;
+	bool operator ==(const largeFloat& test ) const;
+	bool operator  >(const largeFloat& test ) const;
+	bool operator  <(const largeFloat& test ) const;
+	bool operator >=(const largeFloat& test ) const;
+	bool operator <=(const largeFloat& test ) const;
+	bool operator !=(const largeFloat& test ) const;
+	bool operator  !(                       ) const;
 public:
 	static int precision;
 private:
@@ -60,5 +62,10 @@ private:
 	largeInt postDecValue;
 	char sign;
 };
+
+inline void setPrecision(const int toSet)
+{
+	largeFloat::precision = toSet;
+}
 
 #endif // LARGEFLOAT_H

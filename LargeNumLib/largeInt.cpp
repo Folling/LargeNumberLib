@@ -728,7 +728,7 @@ largeInt largeInt::operator%(const long long divisor) const
 largeInt& largeInt::operator=(const long long setTo)
 {
 	largeInt tmp(setTo);
-	while (tmp.getValue().at(0) == 0 && tmp.size() != 0)tmp.getValue().erase(tmp.getValue().begin());
+	tmp.removeZerosAtStart();
 	*this = tmp;
 	return *this;
 }
