@@ -24,28 +24,29 @@ public:
 	largeFloat toPositive();
 	largeFloat toNegative();
 	largeFloat changeSign();
+	largeFloat adaptSigns();
 public:
 	friend std::istream& operator >> (std::istream& is, largeFloat& iutputVal);
 	friend std::ostream& operator << (std::ostream& os, const largeFloat& outputVal);
 public:
-	largeFloat operator  + (const largeFloat& summand) const;
+	largeFloat operator  + (const largeFloat& summand   ) const;
 	largeFloat operator  - (const largeFloat& subtrahend) const;
-	largeFloat operator  * (const largeFloat& factor) const;
-	largeFloat operator  / (const largeFloat& divisor) const;
-	largeFloat operator  % (const largeFloat& divisor) const;
+	largeFloat operator  * (const largeFloat& factor    ) const;
+	largeFloat operator  / (const largeFloat& divisor   ) const;
+	largeFloat operator  % (const largeFloat& divisor   ) const;
 public:
-	largeFloat operator += (const largeFloat& summand);
+	largeFloat operator += (const largeFloat& summand   );
 	largeFloat operator -= (const largeFloat& subtrahend);
-	largeFloat operator *= (const largeFloat& factor);
-	largeFloat operator /= (const largeFloat& divisor);
-	largeFloat operator %= (const largeFloat& divisor);
+	largeFloat operator *= (const largeFloat& factor    );
+	largeFloat operator /= (const largeFloat& divisor   );
+	largeFloat operator %= (const largeFloat& divisor   );
+
 public:
 	largeFloat operator ++ (int x);
 	largeFloat operator -- (int x);
-	largeFloat operator ++ ();
-	largeFloat operator -- ();
-	largeFloat operator -  ();
-	largeFloat operator -  () const;
+	largeFloat operator ++ (     );
+	largeFloat operator -- (     );
+	largeFloat operator -  (     ) const;
 private:
 	//Pre and post decimal values
 	largeInt preDecValue;

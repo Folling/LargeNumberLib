@@ -6,23 +6,24 @@ const largeInt zero(0);
 
 //quite of a funny story behind this, we do need negative zero since the sign is saved seperately
 //and yes I know there are ways to go around this but it doesn't hurt and is a fun gimick
+
 const largeInt negZero = -zero;
-const largeInt one(1);
-const largeInt two(2);
+const largeInt one( 1);
+const largeInt two( 2);
 const largeInt ten(10);
 
 /*################################
-##########CONSTRUCTORS##########
-################################*/
+  ##########CONSTRUCTORS##########
+  ################################*/
 
-largeInt::largeInt()
+largeInt:: largeInt(                    )
 {
 	value.resize(1);
 	value[0] = 0;
 	sign = '+';
 }
 
-largeInt::largeInt(std::string s_input)
+largeInt:: largeInt(std::string s_input )
 {
 	sign = '+';
 	uint i = 1;
@@ -35,20 +36,20 @@ largeInt::largeInt(std::string s_input)
 	}
 }
 
-largeInt::largeInt(char c_input)
+largeInt:: largeInt(char c_input        )
 {
 	value.resize(1);
 	value.at(0) = resolveChar(c_input);
 	sign = '+';
 }
 
-largeInt::~largeInt()
+largeInt::~largeInt(                    )
 {
 }
 
 /*#######################################
-##########SETTERS AND GETTERS##########
-#######################################*/
+  ##########SETTERS AND GETTERS##########
+  #######################################*/
 
 std::vector<int>& largeInt::getValue() const
 {
@@ -60,7 +61,7 @@ char largeInt::getSign() const
 	return this->sign;
 }
 
-void largeInt::setSign(char newSign) const
+void largeInt::setSign(char newSign)
 {
 	if (newSign != '-' && newSign != '+') throw "Error resolving sign!\n";
 	const_cast<largeInt*>(this)->sign = newSign;
@@ -71,7 +72,6 @@ void largeInt::setValue(const std::vector<int>& input)
 	value = input;
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
 void largeInt::append(const largeInt& tail)
 {
 	for (uint i = 0; i < tail.getValue().size(); i++) {
@@ -84,7 +84,7 @@ uint largeInt::size() const
 	return this->getValue().size();
 }
 
-void largeInt::resize(int newSize, int filler = 0) const
+void largeInt::resize(int newSize, int filler = 0)
 {
 	this->getValue().resize(newSize, filler);
 }
@@ -99,14 +99,14 @@ void largeInt::popEnd()
 	this->getValue().erase(this->getValue().end() - 1);
 }
 
-void largeInt::push_back(int tail) const
+void largeInt::push_back(int tail)
 {
 	this->getValue().push_back(tail);
 }
 
 /*##########################
-##########ASSETS##########
-##########################*/
+  ##########ASSETS##########
+  ##########################*/
 
 //compares the absolute values of two numbers
 int largeInt::compare(const largeInt& toTest) const
@@ -161,10 +161,10 @@ largeInt  largeInt::changeSign()
 }
 
 /*#################################
-##########I-O OPERATORS##########
-#################################*/
+  ##########I-O OPERATORS##########
+  #################################*/
 
-std::istream& operator >>(std::istream& is, largeInt& inputVal)
+std::istream& operator >>(std::istream& is,       largeInt& inputVal )
 {
 	//takes a string as input then 
 	//makes a number out of that stored in a vector
@@ -208,8 +208,8 @@ std::ostream& operator <<(std::ostream& os, const largeInt& outputVal)
 }
 
 /*##########################################
-##########MATHEMATICAL FUNCTIONS##########
-##########################################*/
+  ##########MATHEMATICAL FUNCTIONS##########
+  ##########################################*/
 
 largeInt largeInt::factorial()
 {
@@ -223,10 +223,10 @@ largeInt largeInt::factorial()
 }
 
 /*########################################
-##########ARITHMETIC OPERATORS##########
-########################################*/
+  ##########ARITHMETIC OPERATORS##########
+  ########################################*/
 
-largeInt largeInt::operator+(const largeInt& summand) const
+largeInt largeInt::operator+ (const largeInt& summand   ) const
 {
 	largeInt returnNum;
 	//macros to shorten the code
@@ -400,7 +400,7 @@ largeInt largeInt::operator+(const largeInt& summand) const
 	return returnNum;
 }
 
-largeInt largeInt::operator-(const largeInt& subtrahend) const
+largeInt largeInt::operator- (const largeInt& subtrahend) const
 {
 	//since we basically defined subtraction and negative numbers in the + operator 
 	//and subtraction is the counterpart to addition we just return the addition of the
@@ -409,7 +409,7 @@ largeInt largeInt::operator-(const largeInt& subtrahend) const
 	return result + -subtrahend;
 }
 
-largeInt largeInt::operator*(const largeInt& factor) const
+largeInt largeInt::operator* (const largeInt& factor    ) const
 {
 	if (*this == zero || factor == zero || *this == negZero || factor == negZero) return zero;
 	largeInt LNtmp1 = *this;
@@ -458,7 +458,7 @@ largeInt largeInt::operator*(const largeInt& factor) const
 	return result;
 }
 
-largeInt largeInt::operator/(const largeInt& divisor) const
+largeInt largeInt::operator/ (const largeInt& divisor   ) const
 {
 	if (this->compare(divisor) == -1) throw "Fractions or float-point numbers are not yet supported!\n";
 	if (*this == divisor) return one;
@@ -537,99 +537,93 @@ largeInt largeInt::operator/(const largeInt& divisor) const
 	return result;
 }
 
-largeInt largeInt::operator%(const largeInt& divisor) const
+largeInt largeInt::operator% (const largeInt& divisor   ) const
 {
 	//returns the reminder of a division
 	return *this - (*this / divisor) * divisor;
 }
 
 /*#############################################
-##########OPERATOR-EQUALS OPERATORS##########
-#############################################*/
+  ##########OPERATOR-EQUALS OPERATORS##########
+  #############################################*/
 
-largeInt largeInt::operator+=(const largeInt& summant)
+largeInt largeInt::operator+= (const largeInt& summant   )
 {
 	*this = *this + summant;
 	return *this;
 }
 
-largeInt largeInt::operator-=(const largeInt& subtrahend)
+largeInt largeInt::operator-= (const largeInt& subtrahend)
 {
 	*this = *this - subtrahend;
 	return *this;
 }
 
-largeInt largeInt::operator*=(const largeInt& factor)
+largeInt largeInt::operator*= (const largeInt& factor    )
 {
 	*this = *this * factor;
 	return *this;
 }
 
-largeInt largeInt::operator/=(const largeInt& divisor)
+largeInt largeInt::operator/= (const largeInt& divisor   )
 {
 	*this = *this / divisor;
 	return *this;
 }
 
-largeInt largeInt::operator%=(const largeInt& divisor)
+largeInt largeInt::operator%= (const largeInt& divisor   )
 {
 	*this = *this % divisor;
 	return *this;
 }
 
 /*#######################################
-##########INCREMENT OPERATORS##########
-#######################################*/
+  ##########INCREMENT OPERATORS##########
+  #######################################*/
 
-largeInt largeInt::operator++(int x)
+largeInt largeInt::operator++ (int x     )
 {
 	largeInt& tmp(*this);
 	*this += one;
 	return tmp;
 }
 
-largeInt largeInt::operator--(int x)
+largeInt largeInt::operator-- (int x     )
 {
 	largeInt& tmp(*this);
 	*this -= one;
 	return tmp;
 }
 
-largeInt largeInt::operator -()
+largeInt largeInt::operator++ (          )
+{
+	*this += one;
+	return *this;
+}
+
+largeInt largeInt::operator-- (          )
+{
+	*this -= one;
+	return *this;
+}
+
+largeInt largeInt::operator-  (          ) const
 {
 	// While not changing the Numbers value it does change the sign so
-	this->changeSign();
-	return *this;
+	largeInt temp = const_cast<largeInt&>(*this);
+	temp.changeSign();
+	return temp;
 }
 
-largeInt largeInt::operator++()
-{
-	*this += one;
-	return *this;
-}
-
-largeInt largeInt::operator--()
-{
-	*this -= one;
-	return *this;
-}
-
-int&     largeInt::operator[] (int index) const
+int&     largeInt::operator[] (uint index) const
 {
 	if (index >= this->size()) throw "Index is out of range!\n";
 	return this->getValue().at(index);
 }
 
-largeInt largeInt::operator -() const
-{
-	largeInt result = const_cast<largeInt&>(*this);
-	result.changeSign();
-	return result;
-}
-
 /*########################################
-##########COMPARISON OPERATORS###########
-########################################*/
+  ##########COMPARISON OPERATORS###########
+  ########################################*/
 
 bool largeInt::operator== (const largeInt& test) const
 {
@@ -687,7 +681,7 @@ bool largeInt::operator!= (const largeInt& test) const
 	return true;
 }
 
-bool largeInt::operator!  () const
+bool largeInt::operator!  (                    ) const
 {
 	if (this->getValue().size() <= 1 && this->getValue().at(0) != 0) return false;
 	return true;

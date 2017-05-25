@@ -1,7 +1,6 @@
 #include "largeFloat.h"
 
 
-
 largeFloat::largeFloat()
 {
 	preDecValue.getValue().resize(1);
@@ -94,12 +93,14 @@ largeFloat& largeFloat::removeZerosAtEnd()
 largeFloat largeFloat::toPositive()
 {
 	if (this->sign == '-') this->changeSign();
+	this->adaptSigns();
 	return *this;
 }
 
 largeFloat largeFloat::toNegative()
 {
 	if (this->sign == '+') this->changeSign();
+	this->adaptSigns();
 	return *this;
 }
 
@@ -107,6 +108,14 @@ largeFloat largeFloat::changeSign()
 {
 	if (this->sign == '+') this->sign = '-';
 	else this->sign = '+';
+	this->adaptSigns();
+	return *this;
+}
+
+largeFloat largeFloat::adaptSigns()
+{
+	this->preDecValue.setSign(this->sign);
+	this->postDecValue.setSign(this->sign);
 	return *this;
 }
 
@@ -140,7 +149,8 @@ std::istream& operator >>(std::istream& is, largeFloat& val)
 		uint i = 0;
 		for (; i < s_input.size(); i++)
 		{
-			if (s_input[i] == '.') {
+			if (s_input[i] == '.')
+			{
 				if (i == 0) val.getPreDValue().getValue().insert(val.getPreDValue().getValue().begin(), 0);
 				i++;
 				break;
@@ -173,7 +183,7 @@ std::ostream& operator <<(std::ostream& os, const largeFloat& outputVal)
 		os << outputVal.getPreDValue()[i];
 	}
 	if (outputVal.getPostDValue().size() > 0)
-	{		
+	{
 		if (outputVal.getPostDValue().size() == 1 && outputVal.getPostDValue()[0] == 0) return os;
 		std::cout << '.';
 		for (uint i = 0; i < outputVal.getPostDValue().size(); i++)
@@ -183,6 +193,10 @@ std::ostream& operator <<(std::ostream& os, const largeFloat& outputVal)
 	}
 	return os;
 }
+
+/*########################################
+  ##########ARITHMETIC OPERATORS##########
+  ########################################*/
 
 largeFloat largeFloat::operator+(const largeFloat& summand) const
 {
@@ -208,31 +222,46 @@ largeFloat largeFloat::operator+(const largeFloat& summand) const
 
 
 	//in case there is no postDecValue it's like basic integer addition
-	if (summand1.size() == 0 && summand2.size() == 0) {
+	if (summand1.size() == 0 && summand2.size() == 0)
+	{
 		result.preDecValue = rPreDVal;
 		return result;
 	}
 
 	//otherwise this gets a little tricky
+	//if either of the sizes is just 0 we can set them to just the other
 	if (summand1.size() == 0) rPostDVal = summand2;
-	else if (summand2.size() == 0) rPostDVal = summand1;
-	else {
-		if (summand1.getSign() != summand2.getSign()) {
-			if (summand1 < 0 && summand1.compare(summand2) == 1) {	
-				if (rPreDVal > 0) {
+	if (summand2.size() == 0) rPostDVal = summand1;
+
+	//otherwise we'll calculate it
+	else
+	{
+		//in case they're not equal we have to adjust them just a little
+		//take the exampe 3.3 and -3.4 which would currently return 0.7 because .3+.4 = 7 
+		//but we set them both negative so it would return .3-.4 which would be -.1, we actually want
+		//-.9 though so we add a 1 at the start of the .3 making it .13 and then subtracting .4 making the desired .9
+		if (summand1.getSign() != summand2.getSign())
+		{
+			if (summand1 < 0 && summand1.compare(summand2) == 1)
+			{
+				if (rPreDVal > 0)
+				{
 					summand2.getValue().insert(summand2.getValue().begin(), 1);
 					rPreDVal--;
 				}
 				else rPreDVal.toNegative();
 			}
-			if (summand2 < 0 && summand2.compare(summand1) == 1) {
-				if (rPreDVal > 0) {
+			if (summand2 < 0 && summand2.compare(summand1) == 1)
+			{
+				if (rPreDVal > 0)
+				{
 					summand1.getValue().insert(summand1.getValue().begin(), 1);
 					rPreDVal--;
 				}
 				else rPreDVal.toNegative();
 			}
 		}
+		//afterwards we basically just add them again
 		rPostDVal = summand1 + summand2;
 	}
 
@@ -247,4 +276,99 @@ largeFloat largeFloat::operator+(const largeFloat& summand) const
 	result.postDecValue = rPostDVal;
 	result.sign = result.preDecValue < 0 ? '-' : '+';
 	return result;
+}
+
+largeFloat largeFloat::operator-(const largeFloat& subtrahend) const
+{
+	return *this + -subtrahend;
+}
+
+largeFloat largeFloat::operator*(const largeFloat& factor) const
+{
+	//factors to multiply: x.y * w.z = wy * wz and then moving the decimal point
+	largeInt factor1 = this->getPreDValue();
+	factor1.append(this->getPostDValue());
+
+	largeInt factor2 = factor.getPreDValue();
+	factor2.append(factor.getPostDValue());
+
+	largeFloat result;
+	result.preDecValue = factor1*factor2;
+
+	for(uint i = 0; i < this->getPostDValue().size() + factor.getPostDValue().size(); i++)
+	{
+		result.postDecValue.getValue().insert(result.postDecValue.getValue().begin(), result.getPreDValue()[result.preDecValue.size() - 1]);
+		result.preDecValue.getValue().pop_back();
+	}
+	result.postDecValue.removeZerosAtEnd();
+
+	result.sign = (this->sign == factor.sign) ? '+' : '-';
+	return result;
+}
+
+largeFloat largeFloat::operator/(const largeFloat& divisor) const
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator%(const largeFloat& divisor) const
+{
+	return *this;
+}
+
+/*#############################################
+  ##########OPERATOR-EQUALS OPERATORS##########
+  #############################################*/
+
+largeFloat largeFloat::operator+=(const largeFloat& summand)
+{
+	*this = *this + summand;
+	return *this;
+}
+
+largeFloat largeFloat::operator-=(const largeFloat& subtrahend)
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator*=(const largeFloat& factor)
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator/=(const largeFloat& divisor)
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator%=(const largeFloat& divisor)
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator++(int x)
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator--(int x)
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator++()
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator--()
+{
+	return *this;
+}
+
+largeFloat largeFloat::operator-() const
+{
+	largeFloat temp = const_cast<largeFloat&>(*this);
+	temp.changeSign();
+	return temp;
 }
