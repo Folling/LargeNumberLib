@@ -5,11 +5,6 @@ using namespace Decimal;
 
 //a bunch of useful numbers which can be used in calculations
 const largeInt zero(0);
-
-//quite of a funny story behind this, we do need negative zero since the sign is saved seperately
-//and yes I know there are ways to go around this but it doesn't hurt and is a fun gimick
-
-const largeInt negZero = -zero;
 const largeInt one( 1);
 const largeInt two( 2);
 const largeInt ten(10);
@@ -416,7 +411,7 @@ largeInt largeInt::operator- (const largeInt& subtrahend) const
 
 largeInt largeInt::operator* (const largeInt& factor    ) const
 {
-	if (*this == zero || factor == zero || *this == negZero || factor == negZero) return zero;
+	if (this->compare(zero) == 0 || factor.compare(zero) == 0) return zero;
 	largeInt LNtmp1 = *this;
 	largeInt LNtmp2 = factor;
 	largeInt result = zero;
@@ -466,7 +461,7 @@ largeInt largeInt::operator* (const largeInt& factor    ) const
 largeInt largeInt::operator/ (const largeInt& divisor   ) const
 {	
 	if (*this == divisor) return one;
-	if (divisor == zero) throw "You can't divide by 0!\n";
+	if (divisor.compare(zero) == 0) throw "You can't divide by 0!\n";
 	if (divisor == one) return *this; // x/1 = x
 
 	//macros and declarations

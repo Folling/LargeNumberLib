@@ -5,7 +5,6 @@
 #include "largeInt.h"
 #include "largeFloat.h"
 
-//int resolveChar(char c_input);
 int findFirstNonZero(std::vector<int>);
 int findIntLength(int i_input);
 Decimal::largeInt abs(Decimal::largeInt& value);

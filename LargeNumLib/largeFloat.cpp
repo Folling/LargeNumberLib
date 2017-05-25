@@ -56,8 +56,8 @@ largeFloat::~largeFloat()
 }
 
 /*#######################################
-##########SETTERS AND GETTERS##########
-#######################################*/
+  ##########SETTERS AND GETTERS##########
+  #######################################*/
 
 largeInt& largeFloat::getPreDValue() const
 {
@@ -80,8 +80,8 @@ char largeFloat::getSign() const
 }
 
 /*##########################
-##########ASSETS##########
-##########################*/
+  ##########ASSETS##########
+  ##########################*/
 
 //compares the absolute value of two numbers
 int largeFloat::compare(const largeFloat& toTest) const
@@ -167,8 +167,8 @@ largeFloat largeFloat::adaptSigns()
 }
 
 /*#################################
-##########I-O OPERATORS##########
-#################################*/
+  ##########I-O OPERATORS##########
+  #################################*/
 
 
 std::istream& operator >>(std::istream& is, largeFloat& val)
@@ -341,11 +341,15 @@ largeFloat largeFloat::operator* (const largeFloat& factor     ) const
 	largeInt factor2 = factor.getPreDValue();
 	factor2.append(factor.getPostDValue());
 
+	//actual result value, we first multiply it and then we simply drag over the values:
+	//1.3 * 1.3 = 13*13 with shifted decimal point (1.69 169)
 	largeFloat result;
 	result.preDecValue = factor1*factor2;
 
+	//dragging process
 	for(uint i = 0; i < this->getPostDValue().size() + factor.getPostDValue().size(); i++)
 	{
+		//drags one value to the other
 		result.postDecValue.getValue().insert(result.postDecValue.getValue().begin(), result.getPreDValue()[result.preDecValue.size() - 1]);
 		result.preDecValue.getValue().pop_back();
 	}
@@ -357,11 +361,16 @@ largeFloat largeFloat::operator* (const largeFloat& factor     ) const
 
 largeFloat largeFloat::operator/ (const largeFloat& divisor    ) const
 {
-	if (divisor == zero) throw "You can't divide by zero\n";
+	if (divisor.compare(zero) == 0) throw "You can't divide by zero\n";
+	if (this->compare(divisor) == 1) return largeFloat(1);
+	if (this->compare(zero) == 0) return largeFloat(0);
+
 	largeInt LNdividend = this->getPreDValue();
 	LNdividend.append(this->getPostDValue());
+
 	largeInt LNdivisor = divisor.getPreDValue();
 	LNdivisor.append(divisor.getPostDValue());
+
 	largeFloat result;
 	result.preDecValue = LNdividend / LNdivisor;
 	largeInt reminder = LNdividend % LNdivisor;
