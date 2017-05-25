@@ -1,6 +1,10 @@
 #include "largeFloat.h"
 
+using namespace Decimal;
+
 int largeFloat::precision = 100;
+
+const largeFloat zero(0);
 
 largeFloat::largeFloat()
 {
@@ -120,6 +124,7 @@ int largeFloat::compare(const largeFloat& toTest) const
 largeFloat& largeFloat::removeZerosAtStart()
 {
 	largeInt& sVal = this->getPreDValue();
+	if (sVal.size() == 0) return *this;
 	while (sVal.getValue().front() == 0 && sVal.size() != 1) sVal.getValue().erase(sVal.getValue().begin());
 	return *this;
 }
@@ -127,6 +132,7 @@ largeFloat& largeFloat::removeZerosAtStart()
 largeFloat& largeFloat::removeZerosAtEnd()
 {
 	largeInt& sVal = this->getPostDValue();
+	if (sVal.size() == 0) return *this;
 	while (sVal.getValue().back() == 0 && sVal.size() != 0) sVal.popEnd();
 	return *this;
 }
@@ -218,12 +224,13 @@ std::istream& operator >>(std::istream& is, largeFloat& val)
 
 std::ostream& operator <<(std::ostream& os, const largeFloat& outputVal)
 {
-	if (outputVal.preDecValue.getSign() == '-') std::cout << '-';
+	if (outputVal.getPreDValue().getSign() == '-') std::cout << '-';
 	const_cast<largeFloat&>(outputVal).removeZerosAtStart();
 	for (uint i = 0; i < outputVal.getPreDValue().size(); i++)
 	{
 		os << outputVal.getPreDValue()[i];
 	}
+	outputVal.getPostDValue().removeZerosAtEnd();
 	if (outputVal.getPostDValue().size() > 0)
 	{
 		if (outputVal.getPostDValue().size() == 1 && outputVal.getPostDValue()[0] == 0) return os;
@@ -350,6 +357,7 @@ largeFloat largeFloat::operator* (const largeFloat& factor     ) const
 
 largeFloat largeFloat::operator/ (const largeFloat& divisor    ) const
 {
+	if (divisor == zero) throw "You can't divide by zero\n";
 	largeInt LNdividend = this->getPreDValue();
 	LNdividend.append(this->getPostDValue());
 	largeInt LNdivisor = divisor.getPreDValue();

@@ -1,7 +1,9 @@
 #include "largeInt.h"
 
-//a bunch of useful numbers which can be used in calculations
 
+using namespace Decimal;
+
+//a bunch of useful numbers which can be used in calculations
 const largeInt zero(0);
 
 //quite of a funny story behind this, we do need negative zero since the sign is saved seperately
@@ -132,12 +134,14 @@ int largeInt::compare(const largeInt& toTest) const
 
 largeInt& largeInt::removeZerosAtStart()
 {
+	if (this->size() == 0) return *this;
 	while (this->getValue().front() == 0 && this->size() != 1) this->popFront();
 	return *this;
 }
 
 largeInt& largeInt::removeZerosAtEnd()
 {
+	if (this->size() == 0) return *this;
 	while (this->getValue().back() == 0 && this->size() != 1) this->popEnd();
 	return *this;
 }
@@ -171,11 +175,11 @@ std::istream& operator >>(std::istream& is,       largeInt& inputVal )
 	//makes a number out of that stored in a vector
 	std::string s_input;
 	uint i = 0;
-	inputVal.sign = '+';
+	inputVal.setSign('+');
 	is >> s_input;
 	if (s_input[0] == '-')
 	{
-		inputVal.sign = '-';
+		inputVal.setSign('-');
 		s_input.erase(s_input.begin());
 	}
 	if (s_input[0] > 57 || s_input[0] < 48) throw "Error, please enter only one minus sign!\n";
@@ -199,7 +203,7 @@ std::istream& operator >>(std::istream& is,       largeInt& inputVal )
 
 std::ostream& operator <<(std::ostream& os, const largeInt& outputVal)
 {
-	if (outputVal.sign == '-') std::cout << '-';
+	if (outputVal.getSign() == '-') std::cout << '-';
 	const_cast<largeInt&>(outputVal).removeZerosAtStart();
 	for (uint i = 0; i < outputVal.size(); i++)
 	{
@@ -699,7 +703,7 @@ bool largeInt::operator!  (                    ) const
 largeInt largeInt::operator+(const long long summand) const
 {
 	largeInt LNsummand(summand);
-	return *this + summand;
+	return *this + LNsummand;
 }
 
 largeInt largeInt::operator-(const long long subtrahend) const
