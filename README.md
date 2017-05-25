@@ -12,8 +12,9 @@ a library to handle very large Numbers for calculations
   * access via [] operator
   * factorials
   * floating point number representation and operations
- 2. **Things to soon be implemented**
   * floating point comparison and incrementation
+  
+  2. **Things to soon be implemented**
   * higher mathematical functions
   
  3. **Further plans for the future**
